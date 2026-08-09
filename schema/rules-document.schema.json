@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mtg-rules/mtg-rules/schema/rules-document.schema.json",
+  "title": "MTG Rules Document v0.1",
+  "type": "object",
+  "required": [
+    "version",
+    "metadata",
+    "introduction",
+    "sections",
+    "rules",
+    "glossary",
+    "credits",
+    "classification"
+  ],
+  "properties": {
+    "version": { "const": "0.1.0" },
+    "metadata": {
+      "type": "object",
+      "required": ["effectiveDate"],
+      "properties": {
+        "effectiveDate": { "type": "string", "minLength": 1 },
+        "sourceUrl": { "type": "string", "format": "uri" },
+        "sourceSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "introduction": { "type": "array", "items": { "type": "string" } },
+    "sections": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["id", "title"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["id", "text", "examples", "hash"],
+        "properties": {
+          "id": { "type": "string" },
+          "text": { "type": "string" },
+          "examples": { "type": "array", "items": { "type": "string" } },
+          "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "glossary": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["term", "text"],
+        "properties": {
+          "term": { "type": "string" },
+          "text": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "credits": { "type": "array", "items": { "type": "string" } },
+    "classification": { "type": "object" }
+  },
+  "additionalProperties": false
+}

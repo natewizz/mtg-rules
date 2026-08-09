@@ -1,0 +1,40 @@
+{
+  "name": "mtg-rules",
+  "version": "0.1.0",
+  "description": "Conservatively parse the official Magic: The Gathering Comprehensive Rules into validated structured data.",
+  "type": "module",
+  "bin": {
+    "mtg-rules": "dist/cli.js"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "schema"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit -p tsconfig.json",
+    "format:check": "prettier --check .",
+    "fetch": "tsx src/cli.ts fetch",
+    "parse": "tsx src/cli.ts parse",
+    "validate": "tsx src/cli.ts validate",
+    "rule": "tsx src/cli.ts rule"
+  },
+  "dependencies": {
+    "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "prettier": "^3.5.3",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}

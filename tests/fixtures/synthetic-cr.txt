@@ -1,0 +1,41 @@
+Magic: The Gathering Comprehensive Rules
+
+These rules are effective as of January 1, 2099.
+
+Introduction
+
+This is a synthetic fixture for parser tests.
+
+Contents
+
+1. Game Concepts
+100. General
+Credits
+
+1. Game Concepts
+
+100. General
+
+100.1. A numbered rule with an example.
+
+Example: First example text.
+
+Example: Second example text.
+    This example continues on another source line.
+
+100.1a A lettered subrule continues the parent relationship.
+
+100.2. A multiline rule starts here.
+    The continuation is part of the rule text.
+
+Glossary
+
+Ability
+
+A synthetic glossary definition.
+
+Credits
+
+Synthetic credit line.
+
+These rules are effective as of January 1, 2099.

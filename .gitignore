@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+.env
+*.local
+.rules-source/
+*.rules.txt
+*.cr.txt
+*.json.tmp
+.DS_Store
+
+# Local outputs may contain copyrighted Wizards rules text.
+rules.json
+output/
+/tmp/
