@@ -1,6 +1,6 @@
 {
   "name": "mtg-rules",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Conservatively parse the official Magic: The Gathering Comprehensive Rules into validated structured data.",
   "type": "module",
   "bin": {
@@ -25,7 +25,8 @@
     "fetch": "tsx src/cli.ts fetch",
     "parse": "tsx src/cli.ts parse",
     "validate": "tsx src/cli.ts validate",
-    "rule": "tsx src/cli.ts rule"
+    "rule": "tsx src/cli.ts rule",
+    "check:package": "node scripts/check-package.mjs"
   },
   "dependencies": {
     "commander": "^13.1.0"

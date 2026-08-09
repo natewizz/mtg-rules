@@ -7,9 +7,9 @@ import type {
   RulesSection,
   GlossaryEntry,
 } from './types.js';
+import { parseRuleLine } from './rule-id.js';
 
 const EFFECTIVE_DATE = /These rules are effective as of (.+?)\./i;
-const RULE_ID = /^(\d+(?:\.\d+)+(?:[a-z]+)?)\.?\s+(.+)$/;
 const NUMBERED_HEADING = /^(\d+)\.\s+(.+)$/;
 const EXAMPLE = /^Example:\s*(.*)$/i;
 
@@ -182,12 +182,10 @@ export function parseRules(
         continue;
       }
 
-      const ruleMatch = trimmed.match(RULE_ID);
-      const ruleId = ruleMatch?.[1];
-      const ruleText = ruleMatch?.[2];
-      if (ruleId && ruleText) {
+      const parsedRule = parseRuleLine(trimmed);
+      if (parsedRule) {
         classify('rule');
-        addRule(ruleId, ruleText, lineNumber);
+        addRule(parsedRule.id, parsedRule.text, lineNumber);
         continue;
       }
 
@@ -260,11 +258,22 @@ export function parseRules(
   };
 
   return {
-    version: '0.1.0',
+    version: '0.1.1',
     metadata: {
       ...(effectiveDate ? { effectiveDate } : { effectiveDate: '' }),
       ...(options.sourceUrl ? { sourceUrl: options.sourceUrl } : {}),
       ...(options.sourceSha256 ? { sourceSha256: options.sourceSha256 } : {}),
+      ...(effectiveDate
+        ? {
+            provenance: {
+              provider: 'wizards-of-the-coast' as const,
+              document: 'magic-comprehensive-rules' as const,
+              effectiveDate,
+              ...(options.sourceUrl ? { sourceUrl: options.sourceUrl } : {}),
+              ...(options.sourceSha256 ? { sha256: options.sourceSha256 } : {}),
+            },
+          }
+        : {}),
     },
     introduction,
     sections,

@@ -13,6 +13,7 @@ describe('parseRules', () => {
     const document = parseRules(fixture);
 
     expect(document.metadata.effectiveDate).toBe('January 1, 2099');
+    expect(document.version).toBe('0.1.1');
     expect(document.sections['1']).toEqual({ id: '1', title: 'Game Concepts' });
     expect(document.rules['100.1']?.text).toContain('numbered rule');
     expect(document.rules['100.1a']?.text).toContain('lettered subrule');
@@ -46,13 +47,13 @@ describe('validateRules', () => {
       parseRules(fixture.replace('100.2. A multiline', 'not understood\n\n100.2. A multiline')),
     );
     expect(report.passed).toBe(false);
-    expect(report.issues.some((issue) => issue.code === 'unclassified-line')).toBe(true);
+    expect(report.diagnostics.some((issue) => issue.code === 'UNCLASSIFIED_LINE')).toBe(true);
   });
 
   it('reports orphan subrules', () => {
     const orphan = fixture.replace('100.1a A lettered', '100.9a An orphan');
     const report = validateRules(parseRules(orphan));
     expect(report.passed).toBe(false);
-    expect(report.issues.some((issue) => issue.code === 'orphan-subrule')).toBe(true);
+    expect(report.diagnostics.some((issue) => issue.code === 'ORPHAN_RULE')).toBe(true);
   });
 });

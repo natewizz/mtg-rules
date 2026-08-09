@@ -13,3 +13,4 @@ coverage/
 rules.json
 output/
 /tmp/
+*.tgz
