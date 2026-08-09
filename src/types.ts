@@ -28,6 +28,14 @@ export interface RulesSection {
   title: string;
 }
 
+export interface SourceProvenance {
+  provider: 'wizards-of-the-coast';
+  document: 'magic-comprehensive-rules';
+  effectiveDate: string;
+  sourceUrl?: string;
+  sha256?: string;
+}
+
 export interface ClassificationStats {
   read: number;
   classified: number;
@@ -37,11 +45,12 @@ export interface ClassificationStats {
 }
 
 export interface RulesDocument {
-  version: '0.1.0';
+  version: '0.1.0' | '0.1.1';
   metadata: {
     effectiveDate: string;
     sourceUrl?: string;
     sourceSha256?: string;
+    provenance?: SourceProvenance;
   };
   introduction: string[];
   sections: Record<string, RulesSection>;
@@ -49,6 +58,29 @@ export interface RulesDocument {
   glossary: Record<string, GlossaryEntry>;
   credits: string[];
   classification: ClassificationStats;
+}
+
+export type DiagnosticCode =
+  | 'UNCLASSIFIED_LINE'
+  | 'DUPLICATE_RULE_ID'
+  | 'INVALID_RULE_ID'
+  | 'ORPHAN_RULE'
+  | 'MISSING_EFFECTIVE_DATE'
+  | 'MISSING_SECTIONS'
+  | 'MISSING_GLOSSARY'
+  | 'MISSING_CREDITS'
+  | 'INVALID_RULE_ORDER'
+  | 'UNEXPECTED_DOCUMENT_REGION'
+  | 'SOURCE_FETCH_FAILED'
+  | 'SOURCE_LINK_NOT_FOUND';
+
+export interface Diagnostic {
+  code: DiagnosticCode;
+  message: string;
+  severity: 'error' | 'warning';
+  line?: number;
+  ruleId?: string;
+  expectedParent?: string;
 }
 
 export interface ValidationIssue {
@@ -68,15 +100,29 @@ export interface ValidationIssue {
 }
 
 export interface ValidationReport {
+  valid: boolean;
   passed: boolean;
+  diagnostics: Diagnostic[];
   issues: ValidationIssue[];
   stats: {
     linesRead: number;
     linesClassified: number;
     meaningfulLines: number;
     unclassifiedMeaningfulLines: number;
+    duplicateRuleIds: number;
+    orphanRules: number;
     ruleCount: number;
     sectionCount: number;
     glossaryCount: number;
+    exampleCount: number;
   };
+}
+
+export interface RulesDiff {
+  added: string[];
+  removed: string[];
+  changed: string[];
+  unchanged?: string[];
+  oldSource?: SourceProvenance;
+  newSource?: SourceProvenance;
 }

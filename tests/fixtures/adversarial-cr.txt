@@ -1,0 +1,40 @@
+Magic: The Gathering Comprehensive Rules
+
+These rules are effective as of January 1, 2099.
+
+Introduction
+
+A short introduction with Unicode apostrophes: player’s.
+
+Contents
+
+1. Game Concepts
+100. General
+Credits
+
+1. Game Concepts
+
+100. General
+
+100.1. A parent rule with trailing spaces.
+	Example: An example with tabs around its continuation.
+	The example continues here.
+
+100.1a A multiline subrule.
+    Its text continues on another line.
+
+100.2. A rule after a multiline subrule.
+
+Glossary
+
+Ability
+
+A definition with Unicode quotes: “ability.”
+
+Action
+
+Another definition.
+
+Credits
+
+Synthetic credits.
