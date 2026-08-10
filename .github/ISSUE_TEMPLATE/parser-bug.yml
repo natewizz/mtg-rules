@@ -1,0 +1,50 @@
+name: Parser bug
+description: Report a parser or validation problem without sharing the full rules file.
+title: 'parser: '
+labels: [bug, parser]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: mtg-rules version
+      placeholder: 0.1.2
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node.js version
+      placeholder: v22.0.0
+    validations:
+      required: true
+  - type: input
+    id: effective-date
+    attributes:
+      label: Comprehensive Rules effective date
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command used
+      placeholder: mtg-rules doctor MagicCompRules.txt
+    validations:
+      required: true
+  - type: input
+    id: diagnostic
+    attributes:
+      label: Diagnostic code
+      placeholder: UNCLASSIFIED_LINE
+  - type: textarea
+    id: sample
+    attributes:
+      label: Minimal relevant formatting/sample
+      description: Do not paste or attach the complete Comprehensive Rules file. Use a tiny synthetic or redacted example.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true

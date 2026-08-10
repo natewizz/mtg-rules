@@ -45,7 +45,7 @@ export interface ClassificationStats {
 }
 
 export interface RulesDocument {
-  version: '0.1.0' | '0.1.1';
+  version: '0.1.0' | '0.1.1' | '0.1.2';
   metadata: {
     effectiveDate: string;
     sourceUrl?: string;

@@ -8,17 +8,19 @@ import { discoverRulesUrl, fetchRules, SourceError } from './source.js';
 import { validateRules } from './validator.js';
 import type { RulesDocument, ValidationReport } from './types.js';
 
-const VERSION = '0.1.1';
+const VERSION = '0.1.2';
 const program = new Command();
 
 program
   .name('mtg-rules')
   .description('Parse and validate official MTG Comprehensive Rules data.')
+  .showSuggestionAfterError()
   .version(VERSION);
 
 program
   .command('fetch')
   .description('Discover and fetch the current official Wizards TXT file.')
+  .addHelpText('after', '\nExample:\n  $ mtg-rules fetch -o MagicCompRules.txt\n')
   .requiredOption('-o, --output <path>', 'local output path')
   .action(async ({ output }: { output: string }) => {
     const source = await fetchRules();
@@ -29,20 +31,41 @@ program
   });
 
 async function parseInput(path: string, sourceUrl?: string): Promise<RulesDocument> {
-  const text = await readFile(path, 'utf8');
+  const text = await readTextFile(path);
   return parseRules(text, {
     ...(sourceUrl ? { sourceUrl } : {}),
     sourceSha256: hashText(text),
   });
 }
 
-function loadDocument(path: string): Promise<RulesDocument> {
-  return readFile(path, 'utf8').then((text) => JSON.parse(text) as RulesDocument);
+async function readTextFile(path: string): Promise<string> {
+  try {
+    return await readFile(path, 'utf8');
+  } catch (error) {
+    throw new Error(
+      `Could not read rules file: ${path} (${error instanceof Error ? error.message : String(error)})`,
+    );
+  }
+}
+
+async function loadDocument(path: string): Promise<RulesDocument> {
+  try {
+    const text = await readFile(path, 'utf8');
+    return JSON.parse(text) as RulesDocument;
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      throw new Error(`Could not parse generated rules JSON: ${path}`);
+    }
+    throw new Error(
+      `Could not read generated rules JSON: ${path} (${error instanceof Error ? error.message : String(error)})`,
+    );
+  }
 }
 
 program
   .command('parse')
   .description('Parse a local official TXT file into deterministic JSON.')
+  .addHelpText('after', '\nExample:\n  $ mtg-rules parse MagicCompRules.txt -o rules.json\n')
   .argument('<input>', 'local TXT file')
   .requiredOption('-o, --output <path>', 'local JSON output path')
   .option('--source-url <url>', 'official source URL to record in provenance')
@@ -58,6 +81,7 @@ program
 program
   .command('validate')
   .description('Validate a local official TXT file without writing generated rules JSON.')
+  .addHelpText('after', '\nExample:\n  $ mtg-rules validate MagicCompRules.txt --json\n')
   .argument('<input>', 'local TXT file')
   .option('--source-url <url>', 'official source URL to record in provenance')
   .option('--json', 'print deterministic machine-readable diagnostics')
@@ -71,6 +95,7 @@ program
 program
   .command('doctor')
   .description('Check whether a local source is fully understood by this parser version.')
+  .addHelpText('after', '\nExample:\n  $ mtg-rules doctor MagicCompRules.txt\n')
   .argument('<input>', 'local TXT file')
   .option('--source-url <url>', 'official source URL to record in provenance')
   .option('--json', 'print a deterministic machine-readable report')
@@ -114,6 +139,7 @@ program
 program
   .command('rule')
   .description('Print a rule from a locally generated rules JSON file.')
+  .addHelpText('after', '\nExample:\n  $ mtg-rules rule 704.5f --from rules.json\n')
   .argument('<id>', 'rule ID, e.g. 704.5f')
   .requiredOption('--from <path>', 'local rules JSON path')
   .action(async (id: string, { from }: { from: string }) => {
@@ -129,6 +155,7 @@ program
 program
   .command('diff')
   .description('Diff two local generated rules JSON documents by rule ID and hash.')
+  .addHelpText('after', '\nExample:\n  $ mtg-rules diff old.json new.json\n')
   .argument('<old>', 'older local rules JSON path')
   .argument('<new>', 'newer local rules JSON path')
   .option('--json', 'print deterministic machine-readable output')
@@ -169,7 +196,10 @@ function printReport(report: ValidationReport): void {
   console.log(`Examples: ${report.stats.exampleCount}`);
   if (report.valid) console.log('Validation passed.');
   else {
-    console.error(`Validation failed with ${report.diagnostics.length} diagnostic(s).`);
+    const errors = report.diagnostics.filter((item) => item.severity === 'error').length;
+    console.error(
+      `Validation failed: ${errors} error(s). Run with --json for structured diagnostics.`,
+    );
     printDiagnostics(report);
   }
 }

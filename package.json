@@ -1,14 +1,36 @@
 {
   "name": "mtg-rules",
-  "version": "0.1.1",
-  "description": "Conservatively parse the official Magic: The Gathering Comprehensive Rules into validated structured data.",
+  "version": "0.1.2",
+  "description": "Parse the official Magic: The Gathering Comprehensive Rules into validated, deterministic data.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/natewizz/mtg-rules.git"
+  },
+  "homepage": "https://github.com/natewizz/mtg-rules#readme",
+  "bugs": {
+    "url": "https://github.com/natewizz/mtg-rules/issues"
+  },
+  "keywords": [
+    "magic",
+    "magic-the-gathering",
+    "mtg",
+    "comprehensive-rules",
+    "rules",
+    "parser"
+  ],
   "type": "module",
   "bin": {
     "mtg-rules": "dist/cli.js"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "files": [
     "dist",
     "schema"
@@ -26,6 +48,10 @@
     "parse": "tsx src/cli.ts parse",
     "validate": "tsx src/cli.ts validate",
     "rule": "tsx src/cli.ts rule",
+    "example:parse": "tsx examples/parse.ts",
+    "example:lookup": "tsx examples/lookup.ts",
+    "example:validate": "tsx examples/validate.ts",
+    "example:diff": "tsx examples/diff.ts",
     "check:package": "node scripts/check-package.mjs"
   },
   "dependencies": {

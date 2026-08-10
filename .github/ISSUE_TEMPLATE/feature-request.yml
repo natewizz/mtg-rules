@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest a focused developer-facing improvement.
+title: 'feature: '
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What developer problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected API or CLI behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: data
+    attributes:
+      label: Rules data impact
+      options:
+        - label: This request may require distributing Wizards-owned rules data.
