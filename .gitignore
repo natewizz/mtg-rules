@@ -6,7 +6,10 @@ coverage/
 .rules-source/
 *.rules.txt
 *.cr.txt
+MagicCompRules*.txt
+/downloads/
 *.json.tmp
+rules.json
 .DS_Store
 
 # Local outputs may contain copyrighted Wizards rules text.

@@ -1,0 +1,34 @@
+name: Source discovery problem
+description: Report a problem finding or fetching the official Wizards TXT.
+title: 'source: '
+labels: [bug, source-discovery]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: mtg-rules version
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command used
+      placeholder: mtg-rules fetch -o MagicCompRules.txt
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostic
+    attributes:
+      label: Error or diagnostic
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Official Wizards rules-page URL, if relevant
+      placeholder: https://magic.wizards.com/en/rules
+  - type: textarea
+    id: manual-check
+    attributes:
+      label: Manual check
+      description: Did the official TXT link appear on the Wizards rules page when checked manually?

@@ -14,7 +14,7 @@
     "classification"
   ],
   "properties": {
-    "version": { "enum": ["0.1.0", "0.1.1"] },
+    "version": { "enum": ["0.1.0", "0.1.1", "0.1.2"] },
     "metadata": {
       "type": "object",
       "required": ["effectiveDate"],
