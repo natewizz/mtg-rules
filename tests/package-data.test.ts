@@ -8,6 +8,7 @@ import { stringifyRules } from '../src/json.js';
 import { renderNoticeText, UNOFFICIAL_NOTICE_STATEMENTS } from '../src/notices.js';
 import {
   PackageDataError,
+  inspectPackagedArtifact,
   packageRulesDocument,
   packageRulesSource,
   writePackagedRules,
@@ -123,5 +124,48 @@ describe('writePackagedRules', () => {
     await expect(writePackagedRules(parseRules(fixture), { jsonPath, noticePath })).rejects.toThrow(
       /without an explicit data profile/,
     );
+  });
+});
+
+describe('inspectPackagedArtifact', () => {
+  it('accepts a packaged JSON file and matching NOTICE sidecar', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'mtg-rules-inspect-'));
+    tempDirs.push(dir);
+    const jsonPath = join(dir, 'rules.json');
+    const noticePath = join(dir, 'NOTICE.txt');
+    const document = packageRulesSource(fixture, {
+      profile: COMPLETE_GENERATED_DOCUMENT,
+      sourceUrl,
+    });
+    await writePackagedRules(document, { jsonPath, noticePath });
+
+    expect(
+      inspectPackagedArtifact(await readFile(jsonPath, 'utf8'), await readFile(noticePath, 'utf8')),
+    ).toMatchObject({
+      profile: COMPLETE_GENERATED_DOCUMENT,
+      version: '0.2.0',
+      effectiveDate: 'January 1, 2099',
+      sourceUrl,
+      unofficial: true,
+      freeUseOnly: true,
+      ruleCount: Object.keys(document.rules).length,
+    });
+  });
+
+  it('rejects local parse output, missing notices, and a mismatched NOTICE sidecar', () => {
+    const document = packageRulesSource(fixture, {
+      profile: COMPLETE_GENERATED_DOCUMENT,
+      sourceUrl,
+    });
+    const json = stringifyRules(document);
+    const notice = renderNoticeText();
+
+    expect(() => inspectPackagedArtifact(stringifyRules(parseRules(fixture)), notice)).toThrow(
+      /data profile/,
+    );
+    expect(() =>
+      inspectPackagedArtifact(json.replace('"unofficial": true', '"unofficial": false'), notice),
+    ).toThrow(/notices/);
+    expect(() => inspectPackagedArtifact(json, `${notice} extra`)).toThrow(/NOTICE sidecar/);
   });
 });

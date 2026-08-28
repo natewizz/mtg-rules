@@ -51,7 +51,7 @@ Do not submit or commit:
 - large copied portions of Wizards rules text; or
 - private Wizards correspondence.
 
-Keep `parse` output and `package-data` artifacts local or on a reviewed release asset. Do not add them to Git or the npm package. Keep synthetic fixtures original and small. The MIT license covers original code only; Wizards-owned text remains subject to the notices in `NOTICE.md`.
+Keep `parse` output and `package-data` artifacts local or on a reviewed GitHub pre-release asset. Do not add them to Git, `web/rules.json`, or the npm package. Maintainers publishing data must follow [docs/data-release.md](docs/data-release.md). Keep synthetic fixtures original and small. The MIT license covers original code only; Wizards-owned text remains subject to the notices in `NOTICE.md`.
 
 ## Pull requests
 

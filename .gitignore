@@ -15,8 +15,10 @@ rules.json
 .DS_Store
 
 # Local outputs may contain Wizards rules text.
+# Stage packaged JSON only under output/ (gitignored); publish via GitHub pre-release.
 rules.json
 output/
+web/rules.json
 /tmp/
 *.tgz
 
