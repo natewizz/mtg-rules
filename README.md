@@ -23,7 +23,9 @@ This repository still does **not** contain:
 - official Wizards TXT files;
 - Git-tracked generated JSON containing the complete rules text;
 - historical Comprehensive Rules copies; or
-- a hosted rules API or website.
+- a hosted rules API.
+
+A static lookup tester lives in `web/`. It does not embed the Comprehensive Rules; load a packaged `rules.json` locally or from a GitHub pre-release asset.
 
 `parse` writes local JSON for the user. `package-data` is the only command that produces an approved distributable artifact, and only when the profile is explicit, validation passes, and provenance plus notices are present. Official source TXT is fetched at runtime or supplied locally. Approved JSON belongs in a GitHub **pre-release asset**, not in Git or the npm package. The manual checklist is in [docs/data-release.md](docs/data-release.md). Synthetic fixtures in `tests/fixtures/` remain original and small.
 
@@ -115,6 +117,17 @@ Compare local generated documents:
 node dist/cli.js diff /tmp/old-rules.json /tmp/new-rules.json
 node dist/cli.js diff /tmp/old-rules.json /tmp/new-rules.json --json
 ```
+
+## Static tester
+
+`web/` is a small lookup page for packaged JSON. It is free to use, shows the unofficial notices, and refuses JSON that is not a `complete-generated-document` artifact.
+
+```bash
+cp output/data-release/rules.json web/rules.json
+npm run web
+```
+
+Then open http://127.0.0.1:4173/. Do not commit `web/rules.json`. You can also open a downloaded release JSON with the file picker. GitHub release downloads are often blocked by browser CORS; same-origin `web/rules.json` or a local file is the reliable path.
 
 ## Programmatic API
 
@@ -229,4 +242,4 @@ See [CHANGELOG.md](CHANGELOG.md) for the v0.1.0, v0.1.1, v0.1.2, and v0.2.0 hist
 
 ## Non-goals
 
-This release does not provide semantic rule interpretation, semantic diffs, rename detection, historical archives, a hosted API, a website, web search, a database, card data, Scryfall integration, rule explanations, AI, embeddings, automatic releases, or npm publishing of full rules JSON.
+This release does not provide semantic rule interpretation, semantic diffs, rename detection, historical archives, a hosted API, a database, card data, Scryfall integration, rule explanations, AI, embeddings, automatic data releases, or npm publishing of full rules JSON.

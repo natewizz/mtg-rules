@@ -1,0 +1,160 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f6f4ef;
+  --fg: #1c1917;
+  --muted: #57534e;
+  --card: #fffcf7;
+  --line: #d6d3d1;
+  --accent: #1d4ed8;
+  --warn: #9a3412;
+  font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, Georgia, serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1917;
+    --fg: #f5f5f4;
+    --muted: #a8a29e;
+    --card: #292524;
+    --line: #44403c;
+    --accent: #93c5fd;
+    --warn: #fdba74;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.45;
+}
+
+.skip {
+  position: absolute;
+  left: -999px;
+}
+
+.skip:focus {
+  left: 1rem;
+  top: 1rem;
+  background: var(--card);
+  padding: 0.5rem;
+}
+
+.banner,
+footer {
+  background: #1c1917;
+  color: #fafaf9;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.95rem;
+}
+
+.banner p,
+footer p {
+  margin: 0.35rem 0;
+}
+
+main {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+
+.lede,
+.load p,
+label {
+  color: var(--muted);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+button,
+.file {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg);
+  padding: 0.45rem 0.8rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+}
+
+.file input {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+#search {
+  width: 100%;
+  max-width: 32rem;
+  font: inherit;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.35rem;
+  background: var(--card);
+  color: var(--fg);
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: minmax(12rem, 18rem) 1fr;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 800px) {
+  .panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+#results {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: var(--card);
+  max-height: 28rem;
+  overflow: auto;
+}
+
+#results button {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+}
+
+#detail {
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: var(--card);
+  padding: 1rem 1.1rem;
+}
+
+#detail h3 {
+  margin-top: 0;
+}
+
+.examples {
+  padding-left: 1.1rem;
+}
+
+.status-error {
+  color: var(--warn);
+}
+
+a {
+  color: var(--accent);
+}

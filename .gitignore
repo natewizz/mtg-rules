@@ -18,6 +18,7 @@ rules.json
 # Stage packaged JSON only under output/ (gitignored); publish via GitHub pre-release.
 rules.json
 output/
+web/rules.json
 /tmp/
 *.tgz
 

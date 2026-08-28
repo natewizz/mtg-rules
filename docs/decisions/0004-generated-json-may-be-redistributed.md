@@ -26,5 +26,6 @@ The original TXT is still fetched at runtime or supplied locally. Generated full
 - Packaged JSON and its NOTICE sidecar must travel together.
 - npm packages continue to ship code and schema, not full rules JSON.
 - The supported public distribution channel is a manual GitHub **pre-release** asset. See `docs/data-release.md`.
-- A hosted website or API is still out of scope until separately implemented.
+- A hosted production API is still out of scope until separately implemented.
+- `web/` may look up packaged JSON in the browser. It must not embed or Git-track the complete rules text.
 - Future paid access to rules data is not permitted. Maintenance donations or sponsorships may be added later without charging for the data.

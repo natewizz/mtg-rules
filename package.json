@@ -55,7 +55,8 @@
     "example:validate": "tsx examples/validate.ts",
     "example:diff": "tsx examples/diff.ts",
     "check:package": "node scripts/check-package.mjs",
-    "check:data-artifact": "node scripts/check-data-artifact.mjs"
+    "check:data-artifact": "node scripts/check-data-artifact.mjs",
+    "web": "python3 -m http.server 4173 --bind 127.0.0.1 --directory web"
   },
   "dependencies": {
     "commander": "^13.1.0"

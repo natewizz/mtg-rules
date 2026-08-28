@@ -9,7 +9,8 @@ Permitted generated-JSON redistribution:
 - embedded unofficial, free-use-only notices in packaged JSON and a NOTICE sidecar;
 - recorded source URL, source SHA-256, and effective date on packaged artifacts;
 - kept official TXT and full generated JSON out of Git and the npm package;
-- added a manual GitHub pre-release checklist and artifact inspection for `rules.json` plus `NOTICE.txt`; and
+- added a manual GitHub pre-release checklist and artifact inspection for `rules.json` plus `NOTICE.txt`;
+- added a static lookup tester in `web/` that loads packaged JSON and shows required notices; and
 - clarified that MIT covers original code only, not Wizards-owned rules text.
 
 ## 0.1.2
