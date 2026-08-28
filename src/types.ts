@@ -28,12 +28,24 @@ export interface RulesSection {
   title: string;
 }
 
+export type DocumentVersion = '0.1.0' | '0.1.1' | '0.1.2' | '0.2.0';
+
+export type DataProfile = 'complete-generated-document';
+
 export interface SourceProvenance {
   provider: 'wizards-of-the-coast';
   document: 'magic-comprehensive-rules';
   effectiveDate: string;
   sourceUrl?: string;
   sha256?: string;
+}
+
+export interface RulesNotices {
+  unofficial: true;
+  freeUseOnly: true;
+  commercialUsePermitted: false;
+  statements: string[];
+  officialSourcePage: string;
 }
 
 export interface ClassificationStats {
@@ -45,12 +57,14 @@ export interface ClassificationStats {
 }
 
 export interface RulesDocument {
-  version: '0.1.0' | '0.1.1' | '0.1.2';
+  version: DocumentVersion;
   metadata: {
     effectiveDate: string;
     sourceUrl?: string;
     sourceSha256?: string;
     provenance?: SourceProvenance;
+    dataProfile?: DataProfile;
+    notices?: RulesNotices;
   };
   introduction: string[];
   sections: Record<string, RulesSection>;

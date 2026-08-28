@@ -12,4 +12,4 @@
 - [ ] `npm run build` passes
 - [ ] `npm run check:package` passes
 - [ ] Documentation updated if public behavior changed
-- [ ] No official CR files or generated full rules data included
+- [ ] No official CR TXT files or Git-tracked generated full rules JSON included

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/mtg-rules/mtg-rules/schema/rules-document.schema.json",
-  "title": "MTG Rules Document v0.1",
+  "title": "MTG Rules Document v0.2",
   "type": "object",
   "required": [
     "version",
@@ -14,7 +14,7 @@
     "classification"
   ],
   "properties": {
-    "version": { "enum": ["0.1.0", "0.1.1", "0.1.2"] },
+    "version": { "enum": ["0.1.0", "0.1.1", "0.1.2", "0.2.0"] },
     "metadata": {
       "type": "object",
       "required": ["effectiveDate"],
@@ -22,6 +22,29 @@
         "effectiveDate": { "type": "string", "minLength": 1 },
         "sourceUrl": { "type": "string", "format": "uri" },
         "sourceSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "dataProfile": { "const": "complete-generated-document" },
+        "notices": {
+          "type": "object",
+          "required": [
+            "unofficial",
+            "freeUseOnly",
+            "commercialUsePermitted",
+            "statements",
+            "officialSourcePage"
+          ],
+          "properties": {
+            "unofficial": { "const": true },
+            "freeUseOnly": { "const": true },
+            "commercialUsePermitted": { "const": false },
+            "statements": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            },
+            "officialSourcePage": { "type": "string", "format": "uri" }
+          },
+          "additionalProperties": false
+        },
         "provenance": {
           "type": "object",
           "required": ["provider", "document", "effectiveDate"],

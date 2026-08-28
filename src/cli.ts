@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 import { readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 import { Command } from 'commander';
 import { diffRules } from './diff.js';
 import { getRule, hashText, parseRules } from './parser.js';
 import { stringifyRules } from './json.js';
-import { discoverRulesUrl, fetchRules, SourceError } from './source.js';
+import { PackageDataError, packageRulesSource, writePackagedRules } from './package-data.js';
+import { fetchRules, SourceError } from './source.js';
 import { validateRules } from './validator.js';
 import type { RulesDocument, ValidationReport } from './types.js';
+import { PACKAGE_VERSION } from './version.js';
 
-const VERSION = '0.1.2';
+const VERSION = PACKAGE_VERSION;
 const program = new Command();
 
 program
@@ -61,6 +64,73 @@ async function loadDocument(path: string): Promise<RulesDocument> {
     );
   }
 }
+
+program
+  .command('package-data')
+  .description('Write an approved generated-JSON artifact with required unofficial notices.')
+  .addHelpText(
+    'after',
+    '\nExamples:\n  $ mtg-rules package-data MagicCompRules.txt -o output/rules.json --profile complete-generated-document --source-url https://media.wizards.com/2026/downloads/MagicCompRules.txt\n  $ mtg-rules package-data --fetch -o output/rules.json --profile complete-generated-document\n',
+  )
+  .argument('[input]', 'local TXT file (required unless --fetch)')
+  .requiredOption('-o, --output <path>', 'JSON output path for the approved artifact')
+  .requiredOption('--profile <name>', 'data profile; must be complete-generated-document')
+  .option('--fetch', 'fetch the current official source instead of reading a local file')
+  .option('--source-url <url>', 'official Wizards source URL recorded in provenance')
+  .option('--notice-output <path>', 'NOTICE.txt path (defaults to NOTICE.txt beside the JSON)')
+  .action(
+    async (
+      input: string | undefined,
+      options: {
+        output: string;
+        profile: string;
+        fetch?: boolean;
+        sourceUrl?: string;
+        noticeOutput?: string;
+      },
+    ) => {
+      if (options.fetch && input) {
+        throw new PackageDataError('Provide a local TXT file or --fetch, not both.');
+      }
+      if (!options.fetch && !input) {
+        throw new PackageDataError('Provide a local TXT file or --fetch.');
+      }
+
+      let sourceText: string;
+      let sourceUrl = options.sourceUrl;
+      let sourceSha256: string;
+
+      if (options.fetch) {
+        const source = await fetchRules();
+        sourceText = source.text;
+        sourceUrl = source.url;
+        sourceSha256 = source.sha256;
+      } else {
+        sourceText = await readTextFile(input as string);
+        sourceSha256 = hashText(sourceText);
+      }
+
+      if (!sourceUrl) {
+        throw new PackageDataError(
+          'package-data requires --source-url or --fetch so provenance can be recorded.',
+        );
+      }
+
+      const document = packageRulesSource(sourceText, {
+        profile: options.profile,
+        sourceUrl,
+        sourceSha256,
+      });
+      const noticePath = options.noticeOutput ?? join(dirname(options.output), 'NOTICE.txt');
+      await writePackagedRules(document, { jsonPath: options.output, noticePath });
+      console.log(`Profile: ${document.metadata.dataProfile}`);
+      console.log(`Effective date: ${document.metadata.effectiveDate}`);
+      console.log(`Source: ${document.metadata.sourceUrl}`);
+      console.log(`SHA-256: ${document.metadata.sourceSha256}`);
+      console.log(`Wrote ${options.output}`);
+      console.log(`Wrote ${noticePath}`);
+    },
+  );
 
 program
   .command('parse')
@@ -231,6 +301,7 @@ function printDiff(result: ReturnType<typeof diffRules>): void {
 
 program.parseAsync().catch((error: unknown) => {
   if (error instanceof SourceError) console.error(`[${error.diagnostic.code}] ${error.message}`);
+  else if (error instanceof PackageDataError) console.error(error.message);
   else console.error(error instanceof Error ? error.message : error);
   process.exitCode = 1;
 });
