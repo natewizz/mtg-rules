@@ -25,7 +25,7 @@ This repository still does **not** contain:
 - historical Comprehensive Rules copies; or
 - a hosted rules API or website.
 
-`parse` writes local JSON for the user. `package-data` is the only command that produces an approved distributable artifact, and only when the profile is explicit, validation passes, and provenance plus notices are present. Official source TXT is fetched at runtime or supplied locally. Approved JSON belongs in a release asset, not in Git or the npm package. Synthetic fixtures in `tests/fixtures/` remain original and small.
+`parse` writes local JSON for the user. `package-data` is the only command that produces an approved distributable artifact, and only when the profile is explicit, validation passes, and provenance plus notices are present. Official source TXT is fetched at runtime or supplied locally. Approved JSON belongs in a GitHub **pre-release asset**, not in Git or the npm package. The manual checklist is in [docs/data-release.md](docs/data-release.md). Synthetic fixtures in `tests/fixtures/` remain original and small.
 
 ## Installation
 
@@ -106,6 +106,8 @@ Write an approved distributable JSON artifact with required notices. This is dis
 node dist/cli.js package-data /tmp/MagicCompRules.txt -o /tmp/mtg-rules-data/rules.json --profile complete-generated-document --source-url https://media.wizards.com/2026/downloads/MagicCompRules.txt
 node dist/cli.js package-data --fetch -o /tmp/mtg-rules-data/rules.json --profile complete-generated-document
 ```
+
+Publishing that pair as a GitHub pre-release asset is a separate manual process. See [docs/data-release.md](docs/data-release.md).
 
 Compare local generated documents:
 
@@ -211,7 +213,7 @@ MTG_RULES_INTEGRATION=1 npm test
 MTG_RULES_SOURCE=/tmp/MagicCompRules.txt npm test
 ```
 
-The package check builds a tarball, checks its contents, installs it into a temporary consumer, verifies public imports and declarations, and invokes the packaged CLI. It does not publish anything.
+The package check builds a tarball, checks its contents, installs it into a temporary consumer, verifies public imports and declarations, and invokes the packaged CLI. It does not publish anything. After `package-data` has written a local artifact, `npm run check:data-artifact -- output/data-release/rules.json` verifies notices and provenance. Do not commit that artifact. The GitHub upload steps are in [docs/data-release.md](docs/data-release.md).
 
 ## Contributing
 

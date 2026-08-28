@@ -1,9 +1,14 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import { isPermittedDataProfile, type PermittedDataProfile } from './data-profile.js';
+import {
+  COMPLETE_GENERATED_DOCUMENT,
+  isPermittedDataProfile,
+  type PermittedDataProfile,
+} from './data-profile.js';
 import { stringifyRules } from './json.js';
-import { requiredNotices, renderNoticeText } from './notices.js';
+import { renderNoticeText, requiredNotices, UNOFFICIAL_NOTICE_STATEMENTS } from './notices.js';
 import { hashText, parseRules } from './parser.js';
+import { WIZARDS_RULES_PAGE } from './source.js';
 import { validateRules } from './validator.js';
 import { DOCUMENT_VERSION } from './version.js';
 import type { RulesDocument } from './types.js';
@@ -16,6 +21,18 @@ export class PackageDataError extends Error {
     super(message);
     this.name = 'PackageDataError';
   }
+}
+
+export interface PackagedArtifactSummary {
+  profile: typeof COMPLETE_GENERATED_DOCUMENT;
+  version: string;
+  effectiveDate: string;
+  sourceUrl: string;
+  sourceSha256: string;
+  ruleCount: number;
+  glossaryCount: number;
+  unofficial: true;
+  freeUseOnly: true;
 }
 
 export function assertPermittedDataProfile(profile: string): PermittedDataProfile {
@@ -127,4 +144,76 @@ export async function writePackagedRules(
   await mkdir(dirname(paths.noticePath), { recursive: true });
   await writeFile(paths.jsonPath, json, 'utf8');
   await writeFile(paths.noticePath, renderNoticeText(), 'utf8');
+}
+
+export function inspectPackagedArtifact(
+  jsonText: string,
+  noticeText: string,
+): PackagedArtifactSummary {
+  let document: RulesDocument;
+  try {
+    document = JSON.parse(jsonText) as RulesDocument;
+  } catch {
+    throw new PackageDataError('Packaged artifact is not valid JSON.');
+  }
+
+  assertArtifactSafety(jsonText);
+  assertArtifactSafety(noticeText);
+
+  if (document.metadata.dataProfile !== COMPLETE_GENERATED_DOCUMENT) {
+    throw new PackageDataError(
+      'Packaged artifact is missing the complete-generated-document data profile.',
+    );
+  }
+  if (document.version !== DOCUMENT_VERSION) {
+    throw new PackageDataError(
+      `Packaged artifact version must be ${DOCUMENT_VERSION}, got ${document.version}.`,
+    );
+  }
+
+  const notices = document.metadata.notices;
+  if (
+    !notices?.unofficial ||
+    !notices.freeUseOnly ||
+    notices.commercialUsePermitted !== false ||
+    notices.officialSourcePage !== WIZARDS_RULES_PAGE
+  ) {
+    throw new PackageDataError(
+      'Packaged artifact is missing required unofficial free-use notices.',
+    );
+  }
+  for (const statement of UNOFFICIAL_NOTICE_STATEMENTS) {
+    if (!notices.statements.includes(statement)) {
+      throw new PackageDataError('Packaged artifact is missing a required notice statement.');
+    }
+  }
+  if (noticeText !== renderNoticeText()) {
+    throw new PackageDataError('NOTICE sidecar does not match the required notice text.');
+  }
+
+  const sourceUrl = requireOfficialSourceUrl(document.metadata.sourceUrl ?? '');
+  const sourceSha256 = document.metadata.sourceSha256 ?? '';
+  if (!/^[a-f0-9]{64}$/.test(sourceSha256)) {
+    throw new PackageDataError('Packaged artifact is missing a valid source SHA-256.');
+  }
+  if (!document.metadata.effectiveDate) {
+    throw new PackageDataError('Packaged artifact is missing an effective date.');
+  }
+
+  const report = validateRules(document);
+  if (!report.valid) {
+    throw new PackageDataError('Packaged artifact failed validation.');
+  }
+
+  return {
+    profile: COMPLETE_GENERATED_DOCUMENT,
+    version: document.version,
+    effectiveDate: document.metadata.effectiveDate,
+    sourceUrl,
+    sourceSha256,
+    ruleCount: Object.keys(document.rules).length,
+    glossaryCount: Object.keys(document.glossary).length,
+    unofficial: true,
+    freeUseOnly: true,
+  };
 }

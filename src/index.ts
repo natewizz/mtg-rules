@@ -19,9 +19,11 @@ export { requiredNotices, renderNoticeText, UNOFFICIAL_NOTICE_STATEMENTS } from 
 export {
   PackageDataError,
   assertPermittedDataProfile,
+  inspectPackagedArtifact,
   packageRulesDocument,
   packageRulesSource,
   writePackagedRules,
 } from './package-data.js';
+export type { PackagedArtifactSummary } from './package-data.js';
 export { DOCUMENT_VERSION, PACKAGE_VERSION } from './version.js';
 export type * from './types.js';

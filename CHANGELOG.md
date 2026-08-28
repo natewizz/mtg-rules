@@ -8,7 +8,8 @@ Permitted generated-JSON redistribution:
 - added `package-data` so local `parse` is not silently treated as a publisher;
 - embedded unofficial, free-use-only notices in packaged JSON and a NOTICE sidecar;
 - recorded source URL, source SHA-256, and effective date on packaged artifacts;
-- kept official TXT and full generated JSON out of Git and the npm package; and
+- kept official TXT and full generated JSON out of Git and the npm package;
+- added a manual GitHub pre-release checklist and artifact inspection for `rules.json` plus `NOTICE.txt`; and
 - clarified that MIT covers original code only, not Wizards-owned rules text.
 
 ## 0.1.2
