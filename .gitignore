@@ -8,12 +8,19 @@ coverage/
 *.cr.txt
 MagicCompRules*.txt
 /downloads/
+# Official Wizards TXT remains local and is not tracked.
+# Approved generated JSON is a release artifact, not a Git-tracked file.
 *.json.tmp
 rules.json
 .DS_Store
 
-# Local outputs may contain copyrighted Wizards rules text.
+# Local outputs may contain Wizards rules text.
 rules.json
 output/
 /tmp/
 *.tgz
+
+# Local planning and private licensing records
+WIZARDS_PERMISSION_OUTCOME_PLAN.md
+v0.1.1.md
+v012.md

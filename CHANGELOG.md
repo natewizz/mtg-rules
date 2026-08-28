@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0
+
+Permitted generated-JSON redistribution:
+
+- added the named data profile `complete-generated-document`;
+- added `package-data` so local `parse` is not silently treated as a publisher;
+- embedded unofficial, free-use-only notices in packaged JSON and a NOTICE sidecar;
+- recorded source URL, source SHA-256, and effective date on packaged artifacts;
+- kept official TXT and full generated JSON out of Git and the npm package; and
+- clarified that MIT covers original code only, not Wizards-owned rules text.
+
 ## 0.1.2
 
 Developer-experience and release-readiness improvements:

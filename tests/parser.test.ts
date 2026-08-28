@@ -13,7 +13,7 @@ describe('parseRules', () => {
     const document = parseRules(fixture);
 
     expect(document.metadata.effectiveDate).toBe('January 1, 2099');
-    expect(document.version).toBe('0.1.1');
+    expect(document.version).toBe('0.2.0');
     expect(document.sections['1']).toEqual({ id: '1', title: 'Game Concepts' });
     expect(document.rules['100.1']?.text).toContain('numbered rule');
     expect(document.rules['100.1a']?.text).toContain('lettered subrule');

@@ -1,6 +1,6 @@
 {
   "name": "mtg-rules",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Parse the official Magic: The Gathering Comprehensive Rules into validated, deterministic data.",
   "license": "MIT",
   "repository": {
@@ -33,7 +33,8 @@
   "sideEffects": false,
   "files": [
     "dist",
-    "schema"
+    "schema",
+    "NOTICE.md"
   ],
   "engines": {
     "node": ">=22"
@@ -48,6 +49,7 @@
     "parse": "tsx src/cli.ts parse",
     "validate": "tsx src/cli.ts validate",
     "rule": "tsx src/cli.ts rule",
+    "package-data": "tsx src/cli.ts package-data",
     "example:parse": "tsx examples/parse.ts",
     "example:lookup": "tsx examples/lookup.ts",
     "example:validate": "tsx examples/validate.ts",

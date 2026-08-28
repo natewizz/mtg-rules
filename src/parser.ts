@@ -8,6 +8,7 @@ import type {
   GlossaryEntry,
 } from './types.js';
 import { parseRuleLine } from './rule-id.js';
+import { DOCUMENT_VERSION } from './version.js';
 
 const EFFECTIVE_DATE = /These rules are effective as of (.+?)\./i;
 const NUMBERED_HEADING = /^(\d+)\.\s+(.+)$/;
@@ -258,7 +259,7 @@ export function parseRules(
   };
 
   return {
-    version: '0.1.1',
+    version: DOCUMENT_VERSION,
     metadata: {
       ...(effectiveDate ? { effectiveDate } : { effectiveDate: '' }),
       ...(options.sourceUrl ? { sourceUrl: options.sourceUrl } : {}),

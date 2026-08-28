@@ -8,19 +8,24 @@ It is useful for local rules search, judge utilities, Discord bots, MTG develope
 
 This is pre-1.0 software. The parser is tested against the current official Comprehensive Rules, but the public API and generated schema may still evolve before 1.0. If Wizards changes the upstream document structure, validation is expected to fail until the parser is updated rather than silently producing incomplete data.
 
-Current version: **v0.1.2**.
+Current version: **v0.2.0**.
 
 ## Data and licensing boundary
 
-The complete Comprehensive Rules text is copyrighted by Wizards of the Coast. While permission to redistribute generated rules representations is unresolved, this repository does **not** contain or distribute:
+This project is unofficial Fan Content. It is not approved, endorsed, or affiliated with Wizards of the Coast LLC. Magic: The Gathering and related names are trademarks of Wizards of the Coast. The Comprehensive Rules text is copyrighted by Wizards of the Coast.
+
+The MIT license applies to original `mtg-rules` code only. It does **not** apply to Wizards-owned rules text.
+
+Generated machine-readable JSON may be redistributed under the named data profile `complete-generated-document`, for **free, noncommercial use only**. Required notices are in [NOTICE.md](NOTICE.md) and are also embedded in packaged JSON. The data may not be sold, paywalled, or otherwise monetized. Maintenance donations or sponsorships may be added later without charging for access to the rules data.
+
+This repository still does **not** contain:
 
 - official Wizards TXT files;
-- generated JSON containing the complete rules text;
-- historical Comprehensive Rules copies;
-- public downloadable rules data; or
+- Git-tracked generated JSON containing the complete rules text;
+- historical Comprehensive Rules copies; or
 - a hosted rules API or website.
 
-The CLI fetches the current TXT from an official Wizards page, or accepts a local file supplied by the user. Fetched source and generated output remain local. Synthetic fixtures in `tests/fixtures/` are original and intentionally small. Local `diff` operates on user-supplied/generated documents and reports IDs and hashes without creating a hosted archive.
+`parse` writes local JSON for the user. `package-data` is the only command that produces an approved distributable artifact, and only when the profile is explicit, validation passes, and provenance plus notices are present. Official source TXT is fetched at runtime or supplied locally. Approved JSON belongs in a release asset, not in Git or the npm package. Synthetic fixtures in `tests/fixtures/` remain original and small.
 
 ## Installation
 
@@ -45,6 +50,7 @@ node dist/cli.js fetch -o /tmp/mtg-rules-demo/MagicCompRules.txt
 node dist/cli.js doctor /tmp/mtg-rules-demo/MagicCompRules.txt
 node dist/cli.js parse /tmp/mtg-rules-demo/MagicCompRules.txt -o /tmp/mtg-rules-demo/rules.json
 node dist/cli.js rule 704.5f --from /tmp/mtg-rules-demo/rules.json
+node dist/cli.js package-data --fetch -o /tmp/mtg-rules-demo/packaged/rules.json --profile complete-generated-document
 ```
 
 For two locally generated documents:
@@ -94,6 +100,13 @@ Look up a rule:
 node dist/cli.js rule 704.5f --from /tmp/rules.json
 ```
 
+Write an approved distributable JSON artifact with required notices. This is distinct from local `parse`:
+
+```bash
+node dist/cli.js package-data /tmp/MagicCompRules.txt -o /tmp/mtg-rules-data/rules.json --profile complete-generated-document --source-url https://media.wizards.com/2026/downloads/MagicCompRules.txt
+node dist/cli.js package-data --fetch -o /tmp/mtg-rules-data/rules.json --profile complete-generated-document
+```
+
 Compare local generated documents:
 
 ```bash
@@ -117,7 +130,18 @@ const rule = getRule(document, '704.5f');
 const changes = diffRules(oldDocument, document);
 ```
 
-The package also exports the rule-ID helpers `isRuleId`, `parseRuleId`, `parentRuleId`, and `compareRuleIds`, plus source and deterministic serialization helpers. TypeScript declarations are included in the build output.
+To produce a distributable document, use `packageRulesSource` with the permitted profile. Local `parseRules` output is not a redistributable artifact.
+
+```ts
+import { packageRulesSource } from 'mtg-rules';
+
+const packaged = packageRulesSource(sourceText, {
+  profile: 'complete-generated-document',
+  sourceUrl: 'https://media.wizards.com/.../MagicCompRules.txt',
+});
+```
+
+The package also exports the rule-ID helpers `isRuleId`, `parseRuleId`, `parentRuleId`, and `compareRuleIds`, plus source, notices, and deterministic serialization helpers. TypeScript declarations are included in the build output.
 
 ## Validation and doctor
 
@@ -191,16 +215,16 @@ The package check builds a tarball, checks its contents, installs it into a temp
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Parser changes should generally include a synthetic fixture showing the format or failure case being addressed. Do not submit official CR files, generated full rules JSON, historical source copies, large copied portions of Wizards text, or private licensing correspondence.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Parser changes should generally include a synthetic fixture showing the format or failure case being addressed. Do not submit official CR files, Git-tracked generated full rules JSON, historical source copies, large copied portions of Wizards text, or private licensing correspondence.
 
 ## Project decisions
 
-Short ADRs in `docs/decisions/` record that rule numbers are canonical identifiers, generated output is deterministic, and rules text is not semantically interpreted.
+Short ADRs in `docs/decisions/` record that rule numbers are canonical identifiers, generated output is deterministic, rules text is not semantically interpreted, and generated JSON may be redistributed only through the `complete-generated-document` profile with required notices.
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for the v0.1.0, v0.1.1, and v0.1.2 history.
+See [CHANGELOG.md](CHANGELOG.md) for the v0.1.0, v0.1.1, v0.1.2, and v0.2.0 history.
 
 ## Non-goals
 
-This release does not provide semantic rule interpretation, semantic diffs, rename detection, historical archives, public rules data, a hosted API, a website, web search, a database, card data, Scryfall integration, rule explanations, AI, embeddings, automatic releases, or npm publishing.
+This release does not provide semantic rule interpretation, semantic diffs, rename detection, historical archives, a hosted API, a website, web search, a database, card data, Scryfall integration, rule explanations, AI, embeddings, automatic releases, or npm publishing of full rules JSON.

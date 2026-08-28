@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { writeFile } from 'node:fs/promises';
 import { request } from 'node:https';
 import type { Diagnostic } from './types.js';
+import { PACKAGE_VERSION } from './version.js';
 
 export const WIZARDS_RULES_PAGE = 'https://magic.wizards.com/en/rules';
 const WIZARDS_HOSTS = new Set(['magic.wizards.com', 'media.wizards.com']);
@@ -29,7 +30,11 @@ function get(url: string): Promise<{
   return new Promise((resolve, reject) => {
     const req = request(
       url,
-      { headers: { 'User-Agent': 'mtg-rules/0.1.1 (+https://github.com/natewizz/mtg-rules)' } },
+      {
+        headers: {
+          'User-Agent': `mtg-rules/${PACKAGE_VERSION} (+https://github.com/natewizz/mtg-rules)`,
+        },
+      },
       (res) => {
         const chunks: Buffer[] = [];
         res.on('data', (chunk: Buffer) => chunks.push(chunk));

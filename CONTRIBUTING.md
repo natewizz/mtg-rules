@@ -39,17 +39,19 @@ A parser change should generally include a small synthetic fixture demonstrating
 
 The parser is intentionally conservative: meaningful unknown source lines should fail validation rather than disappear silently. If Wizards changes the upstream structure, update the parser and add a focused fixture explaining the change.
 
-## Data and licensing restrictions
+## Data and licensing
+
+Wizards has permitted redistribution of generated machine-readable Comprehensive Rules JSON for free, unofficial use. That does not change how contributions should treat source files.
 
 Do not submit or commit:
 
 - official Comprehensive Rules TXT files;
-- generated full rules JSON;
+- generated full rules JSON, including `package-data` output;
 - historical Comprehensive Rules copies;
 - large copied portions of Wizards rules text; or
 - private Wizards correspondence.
 
-Fetched source and generated output must remain local while redistribution permission is unresolved. Keep synthetic fixtures original and small.
+Keep `parse` output and `package-data` artifacts local or on a reviewed release asset. Do not add them to Git or the npm package. Keep synthetic fixtures original and small. The MIT license covers original code only; Wizards-owned text remains subject to the notices in `NOTICE.md`.
 
 ## Pull requests
 
@@ -61,4 +63,4 @@ Before opening a PR:
 - update documentation when public behavior changes; and
 - inspect `git diff`, `git ls-files`, and `npm pack --dry-run` for accidental source data.
 
-Do not publish npm packages, GitHub releases, or generated rules data from a PR.
+Do not publish npm packages or GitHub releases from a PR. Approved generated JSON, if published, must be a reviewed release asset with `NOTICE.txt` and must not be Git-tracked.
