@@ -6,6 +6,7 @@ const resultsEl = document.querySelector('#results');
 const detailEl = document.querySelector('#detail');
 const noticesEl = document.querySelector('#notices');
 const formEl = document.querySelector('#lookup');
+const brandEl = document.querySelector('.brand');
 const tryButtons = [...document.querySelectorAll('[data-query]')];
 const sectionButtons = [...document.querySelectorAll('.tabs button')];
 
@@ -188,6 +189,23 @@ async function loadJson(text, label) {
   return label;
 }
 
+function showHome() {
+  searchEl.value = '';
+  renderResults('');
+}
+
+brandEl.addEventListener('click', (event) => {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0)
+    return;
+  event.preventDefault();
+  showHome();
+  const home = new URL('./', location.href);
+  home.search = '';
+  home.hash = '';
+  if (location.href !== home.href) history.pushState(null, '', home.href);
+  searchEl.focus();
+});
+
 formEl.addEventListener('submit', (event) => {
   event.preventDefault();
   renderResults(searchEl.value);
@@ -241,6 +259,14 @@ window.addEventListener('hashchange', () => {
   if (!documentData) return;
   const id = decodeURIComponent(window.location.hash.replace(/^#/, ''));
   if (id && documentData.rules[id]) showRule(documentData.rules[id]);
+  else if (!id) showHome();
+});
+
+window.addEventListener('popstate', () => {
+  if (!documentData) return;
+  const id = decodeURIComponent(window.location.hash.replace(/^#/, ''));
+  if (id && documentData.rules[id]) showRule(documentData.rules[id]);
+  else showHome();
 });
 
 try {

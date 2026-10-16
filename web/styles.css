@@ -132,9 +132,68 @@ body {
   display: flex;
   justify-content: space-between;
   gap: 1.25rem;
-  align-items: baseline;
+  align-items: center;
   padding-bottom: 0.55rem;
   border-bottom: 1px solid var(--ink);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.brand:hover {
+  color: var(--ink);
+}
+
+.brand:hover .mark {
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.brand:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.logo {
+  display: block;
+  width: auto;
+  height: 1.65rem;
+  flex: none;
+}
+
+.logo-leaf,
+.logo-tab {
+  stroke: currentColor;
+  stroke-width: 1.75;
+}
+
+.logo-leaf {
+  fill: #fffdf8;
+}
+
+.logo-lines {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: square;
+}
+
+.logo-tab {
+  fill: var(--yellow);
+}
+
+.logo-num {
+  fill: currentColor;
+  font-family: Barlow, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  text-anchor: middle;
+  dominant-baseline: middle;
 }
 
 .mark {
