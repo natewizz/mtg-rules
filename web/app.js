@@ -7,6 +7,7 @@ const detailEl = document.querySelector('#detail');
 const noticesEl = document.querySelector('#notices');
 const formEl = document.querySelector('#lookup');
 const tryButtons = [...document.querySelectorAll('[data-query]')];
+const sectionButtons = [...document.querySelectorAll('.tabs button')];
 
 let documentData;
 
@@ -53,7 +54,23 @@ function showRule(rule) {
     : '';
   detailEl.hidden = false;
   detailEl.innerHTML = `<p class="rule-id">${escapeHtml(rule.id)}</p><p>${escapeHtml(rule.text)}</p>${examples}`;
+  setBoard(sectionOf(rule.id));
   detailEl.scrollIntoView({ block: 'nearest' });
+}
+
+function sectionOf(id) {
+  const hundred = String(id).charAt(0);
+  return hundred >= '1' && hundred <= '9' ? `${hundred}00` : '700';
+}
+
+function setBoard(section) {
+  document.body.dataset.section = section;
+  for (const tab of sectionButtons) {
+    const open = tab.dataset.section === section;
+    tab.classList.toggle('is-open', open);
+    if (open) tab.setAttribute('aria-current', 'true');
+    else tab.removeAttribute('aria-current');
+  }
 }
 
 function showGlossary(entry) {
@@ -70,6 +87,7 @@ function renderResults(query) {
   if (!trimmed) {
     detailEl.hidden = true;
     detailEl.replaceChildren();
+    setBoard('700');
     return;
   }
 
@@ -114,6 +132,7 @@ function renderResults(query) {
 function enableSearch() {
   searchEl.disabled = false;
   for (const button of tryButtons) button.disabled = false;
+  for (const button of sectionButtons) button.disabled = false;
   searchEl.focus();
 }
 
@@ -156,6 +175,38 @@ for (const button of tryButtons) {
     renderResults(searchEl.value);
     searchEl.focus();
   });
+}
+
+for (const button of sectionButtons) {
+  button.addEventListener('click', () => {
+    const section = button.dataset.section ?? '700';
+    searchEl.value = '';
+    setBoard(section);
+    renderSection(section);
+    searchEl.focus();
+  });
+}
+
+function renderSection(section) {
+  if (!documentData) return;
+  const hundred = section.charAt(0);
+  const matches = [];
+  for (const rule of Object.values(documentData.rules)) {
+    if (rule.id.charAt(0) !== hundred) continue;
+    matches.push(rule);
+    if (matches.length >= 40) break;
+  }
+  resultsEl.replaceChildren();
+  for (const rule of matches) {
+    const item = document.createElement('li');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.innerHTML = `<span class="hit-id">${escapeHtml(rule.id)}</span> ${escapeHtml(rule.text.slice(0, 140))}`;
+    button.addEventListener('click', () => showRule(rule));
+    item.append(button);
+    resultsEl.append(item);
+  }
+  if (matches[0]) showRule(matches[0]);
 }
 
 window.addEventListener('hashchange', () => {

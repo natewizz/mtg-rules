@@ -10,100 +10,94 @@
     />
     <link rel="stylesheet" href="./styles.css" />
   </head>
-  <body>
+  <body data-section="700">
     <a class="skip" href="#search">Skip to search</a>
-    <header class="banner">
-      <p>
-        Unofficial Fan Content. Not approved, endorsed, or affiliated with Wizards of the Coast LLC.
-        Magic: The Gathering is a trademark of Wizards of the Coast. Rules text is copyrighted by
-        Wizards of the Coast. This data is free to use only and is not for sale.
-      </p>
-    </header>
+    <div class="board">
+      <main class="leaf">
+        <header class="leaf-head">
+          <p class="mark">mtg-rules</p>
+          <p>
+            Unofficial Fan Content. Not approved, endorsed, or affiliated with Wizards of the Coast
+            LLC. Magic: The Gathering is a trademark of Wizards of the Coast. Rules text is
+            copyrighted by Wizards of the Coast. This data is free to use only and is not for sale.
+          </p>
+        </header>
 
-    <main>
-      <p class="kicker">Comprehensive Rules lookup</p>
-      <h1>mtg-rules</h1>
-      <p class="lede">
-        A free way to find a rule in the official Magic: The Gathering Comprehensive Rules. Type a
-        rule number or a few words. What comes back is the official wording, in the same structure
-        the document uses.
-      </p>
+        <form id="lookup" role="search">
+          <label for="search">Search the rules</label>
+          <input
+            id="search"
+            name="q"
+            type="search"
+            enterkeyhint="search"
+            autocomplete="off"
+            placeholder="704.5f or state-based"
+            disabled
+          />
+          <div class="tries">
+            <span>Try</span>
+            <button type="button" data-query="704.5f" disabled>704.5f</button>
+            <button type="button" data-query="state-based" disabled>state-based</button>
+            <button type="button" data-query="trample" disabled>trample</button>
+          </div>
+        </form>
 
-      <ul class="facts">
-        <li>
-          <strong>Rule numbers are the address.</strong>
-          <span>704.5f always means that rule, in this document and in the next one.</span>
-        </li>
-        <li>
-          <strong>The text is shown as written.</strong>
-          <span>Examples travel with the rule. This page does not judge card interactions.</span>
-        </li>
-        <li>
-          <strong>Reading it is free.</strong>
-          <span>The rules data is not sold or paywalled. The code that parses it is MIT.</span>
-        </li>
-      </ul>
+        <p id="status" role="status">Loading the rules…</p>
+        <article id="detail" hidden></article>
+        <ul id="results"></ul>
 
-      <form id="lookup" role="search">
-        <label for="search">Search the rules</label>
-        <input
-          id="search"
-          name="q"
-          type="search"
-          enterkeyhint="search"
-          autocomplete="off"
-          placeholder="704.5f or state-based"
-          disabled
-        />
-        <div class="tries">
-          <span>Try</span>
-          <button type="button" data-query="704.5f" disabled>704.5f</button>
-          <button type="button" data-query="state-based" disabled>state-based</button>
-          <button type="button" data-query="trample" disabled>trample</button>
-        </div>
-      </form>
+        <footer id="notices">
+          <p>
+            This project is unofficial Fan Content. It is not approved, endorsed, or affiliated with
+            Wizards of the Coast LLC.
+          </p>
+          <p>
+            Magic: The Gathering and related names and marks are trademarks of Wizards of the Coast
+            LLC.
+          </p>
+          <p>
+            The Comprehensive Rules text is copyrighted by Wizards of the Coast. Portions of the
+            materials used are property of Wizards of the Coast. © Wizards of the Coast LLC.
+          </p>
+          <p>
+            This generated data is a structural, machine-readable representation of the official
+            Comprehensive Rules. It does not interpret, modify, or replace the official rules. This
+            page does not judge card interactions.
+          </p>
+          <p>
+            The generated rules data may be used only for free, noncommercial purposes. It may not
+            be sold, paywalled, or otherwise monetized.
+          </p>
+          <p>
+            Optional maintenance support such as donations, sponsorships, or Patreon may be used to
+            keep this project running, without charging for access to the rules data.
+          </p>
+          <p>
+            Official Comprehensive Rules:
+            <a href="https://magic.wizards.com/en/rules">magic.wizards.com/en/rules</a>
+          </p>
+          <p>
+            <a href="https://github.com/natewizz/mtg-rules">github.com/natewizz/mtg-rules</a>
+            · Original parser and tooling code is MIT-licensed. MIT does not apply to Wizards-owned
+            text. Barlow and EB Garamond are used under the SIL Open Font License.
+          </p>
+        </footer>
+      </main>
 
-      <p id="status" role="status">Loading the rules…</p>
-
-      <article id="detail" hidden></article>
-      <ul id="results"></ul>
-    </main>
-
-    <footer id="notices">
-      <p>
-        This project is unofficial Fan Content. It is not approved, endorsed, or affiliated with
-        Wizards of the Coast LLC.
-      </p>
-      <p>
-        Magic: The Gathering and related names and marks are trademarks of Wizards of the Coast LLC.
-      </p>
-      <p>
-        The Comprehensive Rules text is copyrighted by Wizards of the Coast. Portions of the
-        materials used are property of Wizards of the Coast. © Wizards of the Coast LLC.
-      </p>
-      <p>
-        This generated data is a structural, machine-readable representation of the official
-        Comprehensive Rules. It does not interpret, modify, or replace the official rules.
-      </p>
-      <p>
-        The generated rules data may be used only for free, noncommercial purposes. It may not be
-        sold, paywalled, or otherwise monetized.
-      </p>
-      <p>
-        Optional maintenance support such as donations, sponsorships, or Patreon may be used to keep
-        this project running, without charging for access to the rules data.
-      </p>
-      <p>
-        Official Comprehensive Rules:
-        <a href="https://magic.wizards.com/en/rules">magic.wizards.com/en/rules</a>
-      </p>
-      <p>
-        <a href="https://github.com/natewizz/mtg-rules">github.com/natewizz/mtg-rules</a>
-        · Original parser and tooling code is MIT-licensed. MIT does not apply to Wizards-owned
-        text.
-      </p>
-    </footer>
-
+      <nav class="tabs" aria-label="Rule sections">
+        <button type="button" data-section="100" disabled>100</button>
+        <button type="button" data-section="200" disabled>200</button>
+        <button type="button" data-section="300" disabled>300</button>
+        <button type="button" data-section="400" disabled>400</button>
+        <button type="button" data-section="500" disabled>500</button>
+        <button type="button" data-section="600" disabled>600</button>
+        <button type="button" data-section="700" class="is-open" aria-current="true" disabled>
+          700
+        </button>
+        <button type="button" data-section="800" disabled>800</button>
+        <button type="button" data-section="900" disabled>900</button>
+      </nav>
+    </div>
     <script type="module" src="./app.js"></script>
   </body>
 </html>
