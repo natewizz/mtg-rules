@@ -17,16 +17,43 @@ function setStatus(message, isError = false) {
 }
 
 function renderNotices(rulesDocument) {
-  const notices = rulesDocument.metadata.notices;
-  const statements = (notices?.statements ?? [])
-    .map((line) => `<p>${escapeHtml(line)}</p>`)
-    .join('');
+  const statements = rulesDocument.metadata.notices?.statements ?? [];
   const sourceUrl = rulesDocument.metadata.sourceUrl || 'https://magic.wizards.com/en/rules';
-  noticesEl.innerHTML = `${statements}
-    <p>Effective date: ${escapeHtml(rulesDocument.metadata.effectiveDate || 'unknown')}</p>
-    <p>Source: <a href="${escapeAttr(sourceUrl)}">${escapeHtml(sourceUrl)}</a></p>
-    <p>Official Comprehensive Rules: <a href="https://magic.wizards.com/en/rules">magic.wizards.com/en/rules</a></p>
-    <p><a href="https://github.com/natewizz/mtg-rules">github.com/natewizz/mtg-rules</a> · Original parser and tooling code is MIT-licensed. MIT does not apply to Wizards-owned text.</p>`;
+  const groups =
+    statements.length === 6
+      ? [
+          { label: 'Fan content', lines: statements.slice(0, 2) },
+          { label: 'Copyright', lines: statements.slice(2, 3) },
+          { label: 'Use', lines: statements.slice(3) },
+        ]
+      : [{ label: 'Fan content', lines: statements }];
+  const prose = groups
+    .map(
+      (group) => `<section>
+        <h3>${escapeHtml(group.label)}</h3>
+        <div>${group.lines.map((line) => `<p>${escapeHtml(line)}</p>`).join('')}</div>
+      </section>`,
+    )
+    .join('');
+  noticesEl.innerHTML = `<h2>Notices</h2>${prose}
+    <section>
+      <h3>Edition</h3>
+      <dl>
+        <div><dt>Effective</dt><dd>${escapeHtml(rulesDocument.metadata.effectiveDate || 'unknown')}</dd></div>
+        <div><dt>Source</dt><dd><a href="${escapeAttr(sourceUrl)}">${escapeHtml(sourceName(sourceUrl))}</a></dd></div>
+        <div><dt>Rules</dt><dd><a href="https://magic.wizards.com/en/rules">magic.wizards.com/en/rules</a></dd></div>
+        <div><dt>Code</dt><dd><a href="https://github.com/natewizz/mtg-rules">github.com/natewizz/mtg-rules</a>. Original parser and tooling code is MIT-licensed. MIT does not apply to Wizards-owned text.</dd></div>
+      </dl>
+    </section>`;
+}
+
+function sourceName(url) {
+  try {
+    const name = decodeURIComponent(new URL(url).pathname.split('/').pop() || '');
+    return name || url;
+  } catch {
+    return url;
+  }
 }
 
 function escapeHtml(value) {
@@ -53,7 +80,7 @@ function showRule(rule) {
     ? `<h3>Examples</h3><ul class="examples">${rule.examples.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
     : '';
   detailEl.hidden = false;
-  detailEl.innerHTML = `<p class="rule-id">${escapeHtml(rule.id)}</p><p>${escapeHtml(rule.text)}</p>${examples}`;
+  detailEl.innerHTML = `<p class="rule-id">${escapeHtml(rule.id)}</p><p class="wording">${escapeHtml(rule.text)}</p>${examples}`;
   setBoard(sectionOf(rule.id));
   detailEl.scrollIntoView({ block: 'nearest' });
 }
@@ -76,7 +103,7 @@ function setBoard(section) {
 function showGlossary(entry) {
   window.location.hash = '';
   detailEl.hidden = false;
-  detailEl.innerHTML = `<p class="rule-id">Glossary</p><h2>${escapeHtml(entry.term)}</h2><p>${escapeHtml(entry.text)}</p>`;
+  detailEl.innerHTML = `<p class="rule-id">Glossary</p><h2>${escapeHtml(entry.term)}</h2><p class="wording">${escapeHtml(entry.text)}</p>`;
 }
 
 function renderResults(query) {
@@ -98,7 +125,7 @@ function renderResults(query) {
     const item = document.createElement('li');
     const button = document.createElement('button');
     button.type = 'button';
-    button.innerHTML = `<span class="hit-id">${escapeHtml(rule.id)}</span> ${escapeHtml(rule.text.slice(0, 140))}`;
+    button.innerHTML = `<span class="hit-id">${escapeHtml(rule.id)}</span><span class="hit-text">${escapeHtml(rule.text.slice(0, 160))}</span>`;
     button.addEventListener('click', () => showRule(rule));
     item.append(button);
     resultsEl.append(item);
@@ -108,7 +135,7 @@ function renderResults(query) {
     const item = document.createElement('li');
     const button = document.createElement('button');
     button.type = 'button';
-    button.innerHTML = `<span class="hit-id">Glossary</span> ${escapeHtml(entry.term)}`;
+    button.innerHTML = `<span class="hit-id">Glossary</span><span class="hit-text">${escapeHtml(entry.term)}</span>`;
     button.addEventListener('click', () => showGlossary(entry));
     item.append(button);
     resultsEl.append(item);
@@ -201,7 +228,7 @@ function renderSection(section) {
     const item = document.createElement('li');
     const button = document.createElement('button');
     button.type = 'button';
-    button.innerHTML = `<span class="hit-id">${escapeHtml(rule.id)}</span> ${escapeHtml(rule.text.slice(0, 140))}`;
+    button.innerHTML = `<span class="hit-id">${escapeHtml(rule.id)}</span><span class="hit-text">${escapeHtml(rule.text.slice(0, 160))}</span>`;
     button.addEventListener('click', () => showRule(rule));
     item.append(button);
     resultsEl.append(item);
