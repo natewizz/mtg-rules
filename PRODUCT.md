@@ -39,7 +39,7 @@ The name is mtg-rules. The page must identify itself as unofficial Fan Content a
 
 - Live page: https://mtg-rules-liard.vercel.app
 - Repository: https://github.com/natewizz/mtg-rules
-- Current packaged release: v0.2.0-data.1, effective date August 7, 2026, 3,162 rules, 739 glossary entries.
+- Current packaged release: v0.2.0-data.2, effective date September 25, 2026, 3,166 rules, 741 glossary entries.
 - Notices: NOTICE.md
 - Official rules page: https://magic.wizards.com/en/rules
 - No testimonials, user counts, or pricing exist. Do not invent them.
