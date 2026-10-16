@@ -10,6 +10,8 @@ This is pre-1.0 software. The parser is tested against the current official Comp
 
 Current version: **v0.2.0**.
 
+Current rules data: **v0.2.0-data.2**, effective September 25, 2026. 3,166 rules and 741 glossary entries, from `MagicCompRules 20260925.txt`.
+
 ## Data and licensing boundary
 
 This project is unofficial Fan Content. It is not approved, endorsed, or affiliated with Wizards of the Coast LLC. Magic: The Gathering and related names are trademarks of Wizards of the Coast. The Comprehensive Rules text is copyrighted by Wizards of the Coast.

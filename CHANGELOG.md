@@ -4,6 +4,8 @@
 
 Permitted generated-JSON redistribution:
 
+- packaged Comprehensive Rules effective September 25, 2026 as pre-release `v0.2.0-data.2`;
+
 - added the named data profile `complete-generated-document`;
 - added `package-data` so local `parse` is not silently treated as a publisher;
 - embedded unofficial, free-use-only notices in packaged JSON and a NOTICE sidecar;

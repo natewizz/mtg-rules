@@ -39,6 +39,7 @@ function renderNotices(rulesDocument) {
     <section>
       <h3>Edition</h3>
       <dl>
+        <div><dt>Version</dt><dd>${escapeHtml(rulesDocument.version || 'unknown')}</dd></div>
         <div><dt>Effective</dt><dd>${escapeHtml(rulesDocument.metadata.effectiveDate || 'unknown')}</dd></div>
         <div><dt>Source</dt><dd><a href="${escapeAttr(sourceUrl)}">${escapeHtml(sourceName(sourceUrl))}</a></dd></div>
         <div><dt>Rules</dt><dd><a href="https://magic.wizards.com/en/rules">magic.wizards.com/en/rules</a></dd></div>
@@ -175,7 +176,7 @@ async function loadJson(text, label) {
   renderNotices(parsed);
   const count = Object.keys(parsed.rules).length;
   setStatus(
-    `Rules effective ${parsed.metadata.effectiveDate}. ${count.toLocaleString('en-US')} rules. Unofficial, free to use only.`,
+    `mtg-rules ${parsed.version}. Effective ${parsed.metadata.effectiveDate}. ${count.toLocaleString('en-US')} rules. Unofficial, free to use only.`,
   );
   enableSearch();
 

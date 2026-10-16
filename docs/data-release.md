@@ -65,4 +65,4 @@ After the upload, confirm the GitHub release file list is only `rules.json` and 
 
 ## Next CR update
 
-Repeat this checklist. Bump the data tag (`v0.2.0-data.2`, …). Do not overwrite Git history with rules JSON.
+Repeat this checklist. The current pre-release is `v0.2.0-data.2`, effective September 25, 2026. Bump the data tag (`v0.2.0-data.3`, …). Do not overwrite Git history with rules JSON.
