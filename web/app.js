@@ -84,7 +84,6 @@ function showRule(rule) {
   detailEl.hidden = false;
   detailEl.innerHTML = `<p class="rule-id">${escapeHtml(rule.id)}</p><p class="wording">${escapeHtml(rule.text)}</p>${examples}`;
   setBoard(sectionOf(rule.id));
-  detailEl.scrollIntoView({ block: 'nearest' });
 }
 
 function sectionOf(id) {
@@ -229,19 +228,32 @@ for (const button of sectionButtons) {
     searchEl.value = '';
     setBoard(section);
     renderSection(section);
-    searchEl.focus();
   });
+}
+
+function compareRuleIds(a, b) {
+  const parts = (id) => {
+    const match = String(id).match(/^(\d+)(?:\.(\d+))?([a-z]+)?$/);
+    return match
+      ? [Number(match[1]), match[2] === undefined ? -1 : Number(match[2]), match[3] ?? '']
+      : [Number.MAX_SAFE_INTEGER, 0, String(id)];
+  };
+  const left = parts(a);
+  const right = parts(b);
+  return (
+    left[0] - right[0] ||
+    left[1] - right[1] ||
+    (left[2] < right[2] ? -1 : left[2] > right[2] ? 1 : 0)
+  );
 }
 
 function renderSection(section) {
   if (!documentData) return;
   const hundred = section.charAt(0);
-  const matches = [];
-  for (const rule of Object.values(documentData.rules)) {
-    if (rule.id.charAt(0) !== hundred) continue;
-    matches.push(rule);
-    if (matches.length >= 40) break;
-  }
+  const matches = Object.values(documentData.rules)
+    .filter((rule) => rule.id.charAt(0) === hundred)
+    .sort((a, b) => compareRuleIds(a.id, b.id))
+    .slice(0, 40);
   resultsEl.replaceChildren();
   for (const rule of matches) {
     const item = document.createElement('li');
@@ -253,6 +265,11 @@ function renderSection(section) {
     resultsEl.append(item);
   }
   if (matches[0]) showRule(matches[0]);
+  resultsEl.scrollTop = 0;
+  requestAnimationFrame(() => {
+    resultsEl.scrollTop = 0;
+    document.querySelector('.reading')?.scrollIntoView({ block: 'start' });
+  });
 }
 
 window.addEventListener('hashchange', () => {
