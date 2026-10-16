@@ -1,0 +1,23 @@
+name: New rules edition
+description: Ask for a packaged update after Wizards publishes a new Comprehensive Rules file.
+title: 'rules: '
+labels: [enhancement]
+body:
+  - type: input
+    id: source
+    attributes:
+      label: Official source URL
+      description: The Wizards TXT link, if you have it. Do not attach the file or paste the rules.
+      placeholder: https://media.wizards.com/.../MagicCompRules.txt
+  - type: input
+    id: effective
+    attributes:
+      label: Effective date printed in the file
+      placeholder: September 25, 2026
+  - type: textarea
+    id: notes
+    attributes:
+      label: What should be checked
+      description: Say what looks new. Do not paste Comprehensive Rules text.
+    validations:
+      required: true

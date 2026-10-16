@@ -10,6 +10,7 @@ Attach both files to a **pre-release**:
 
 - `rules.json` — profile `complete-generated-document`
 - `NOTICE.txt` — required unofficial / free-use notices
+- `latest.json` — the same pointer committed on `main`, so the release folder matches the stable URL
 
 Do not attach the official Wizards TXT. Do not publish the JSON to npm. Do not merge this work to `main` unless that is a separate, explicit decision.
 
@@ -56,12 +57,15 @@ gh release create v0.2.0-data.1 \
   --title "Comprehensive Rules JSON (pre-release)" \
   --notes-file - \
   output/data-release/rules.json \
-  output/data-release/NOTICE.txt
+  output/data-release/NOTICE.txt \
+  latest.json
 ```
+
+Before the upload, rewrite the committed `latest.json` so `tag`, `effectiveDate`, `sourceSha256`, `ruleCount`, `glossaryCount`, `rulesUrl`, and `noticeUrl` match this release. Commit that pointer. Do not commit `rules.json`.
 
 Release notes must include the unofficial disclaimer, that the JSON is free to use only, the effective date, source URL, source SHA-256, and a reminder that MIT does not apply to Wizards-owned text.
 
-After the upload, confirm the GitHub release file list is only `rules.json` and `NOTICE.txt`, then delete the local `output/data-release` copy if you no longer need it.
+After the upload, confirm the GitHub release file list is `rules.json`, `NOTICE.txt`, and `latest.json`, then delete the local `output/data-release` copy if you no longer need it. The stable pointer for apps is `https://raw.githubusercontent.com/natewizz/mtg-rules/main/latest.json`. The homepage `rules.json` is not that contract.
 
 ## Next CR update
 

@@ -20,6 +20,16 @@ The MIT license applies to original `mtg-rules` code only. It does **not** apply
 
 Generated machine-readable JSON may be redistributed under the named data profile `complete-generated-document`, for **free, noncommercial use only**. Required notices are in [NOTICE.md](NOTICE.md) and are also embedded in packaged JSON. The data may not be sold, paywalled, or otherwise monetized. Maintenance donations or sponsorships may be added later without charging for access to the rules data.
 
+Apps should take the versioned release file, not the copy served with the homepage. The homepage file changes with each site deploy and is not a contract.
+
+The current pointer is [`latest.json`](latest.json) on `main`:
+
+```text
+https://raw.githubusercontent.com/natewizz/mtg-rules/main/latest.json
+```
+
+It names the data tag, effective date, source SHA-256, and the `rules.json` and `NOTICE.txt` URLs. Pin `rulesUrl` for a build. Check `latest.json` when you want a newer edition. The document is one file of about 1.5 MB. Read `rules` by id. Require `profile` `complete-generated-document`, `unofficial: true`, and `freeUseOnly: true`.
+
 This repository still does **not** contain:
 
 - official Wizards TXT files;
@@ -232,7 +242,7 @@ The package check builds a tarball, checks its contents, installs it into a temp
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Parser changes should generally include a synthetic fixture showing the format or failure case being addressed. Do not submit official CR files, Git-tracked generated full rules JSON, historical source copies, large copied portions of Wizards text, or private licensing correspondence.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Open an issue for a new rules edition or a schema change. Do not open a pull request. Do not submit official CR files, Git-tracked generated full rules JSON, historical source copies, large copied portions of Wizards text, or private licensing correspondence.
 
 ## Project decisions
 

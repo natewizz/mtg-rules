@@ -1,0 +1,25 @@
+name: Schema change
+description: Request a change to the packaged JSON shape or the fields an app relies on.
+title: 'schema: '
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What cannot you do with the current document?
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Proposed field or behavior
+      description: Name the field. Do not paste Comprehensive Rules text.
+    validations:
+      required: true
+  - type: input
+    id: tag
+    attributes:
+      label: Data tag you are using
+      placeholder: v0.2.0-data.2
+    validations:
+      required: true

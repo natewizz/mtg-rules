@@ -1,0 +1,12 @@
+{
+  "tag": "v0.2.0-data.2",
+  "profile": "complete-generated-document",
+  "effectiveDate": "September 25, 2026",
+  "sourceSha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+  "ruleCount": 3166,
+  "glossaryCount": 741,
+  "rulesUrl": "https://github.com/natewizz/mtg-rules/releases/download/v0.2.0-data.2/rules.json",
+  "noticeUrl": "https://github.com/natewizz/mtg-rules/releases/download/v0.2.0-data.2/NOTICE.txt",
+  "unofficial": true,
+  "freeUseOnly": true
+}

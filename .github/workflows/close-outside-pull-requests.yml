@@ -1,0 +1,36 @@
+name: Close outside pull requests
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  close:
+    if: github.event.pull_request.user.login != github.repository_owner
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const body = [
+              'Thanks for the interest. This repository takes upgrades as issues, not pull requests.',
+              '',
+              'Open a [new rules edition](https://github.com/natewizz/mtg-rules/issues/new?template=rules-edition.yml) issue or a [schema change](https://github.com/natewizz/mtg-rules/issues/new?template=schema-change.yml) issue instead.',
+              '',
+              'Closing this pull request.',
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body,
+            });
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              state: 'closed',
+            });
