@@ -3,7 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>mtg-rules tester</title>
+    <title>mtg-rules — unofficial Comprehensive Rules lookup</title>
+    <meta
+      name="description"
+      content="Free, unofficial lookup for the Magic: The Gathering Comprehensive Rules. Search a rule number or a phrase."
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -17,56 +21,87 @@
     </header>
 
     <main>
-      <h1>mtg-rules tester</h1>
+      <p class="kicker">Comprehensive Rules lookup</p>
+      <h1>mtg-rules</h1>
       <p class="lede">
-        Look up Comprehensive Rules from a packaged JSON artifact. This page structures the official
-        document; it does not interpret gameplay.
+        A free way to find a rule in the official Magic: The Gathering Comprehensive Rules. Type a
+        rule number or a few words. What comes back is the official wording, in the same structure
+        the document uses.
       </p>
 
-      <section class="load" aria-labelledby="load-heading">
-        <h2 id="load-heading">Load data</h2>
-        <p>
-          Use a <code>rules.json</code> produced by <code>package-data</code>, or the
-          <a href="https://github.com/natewizz/mtg-rules/releases/tag/v0.2.0-data.1"
-            >v0.2.0-data.1 pre-release</a
-          >. The JSON is not stored in Git.
-        </p>
-        <div class="row">
-          <button type="button" id="load-local">Load ./rules.json</button>
-          <label class="file">
-            Open JSON file
-            <input id="file" type="file" accept="application/json,.json" />
-          </label>
+      <ul class="facts">
+        <li>
+          <strong>Rule numbers are the address.</strong>
+          <span>704.5f always means that rule, in this document and in the next one.</span>
+        </li>
+        <li>
+          <strong>The text is shown as written.</strong>
+          <span>Examples travel with the rule. This page does not judge card interactions.</span>
+        </li>
+        <li>
+          <strong>Reading it is free.</strong>
+          <span>The rules data is not sold or paywalled. The code that parses it is MIT.</span>
+        </li>
+      </ul>
+
+      <form id="lookup" role="search">
+        <label for="search">Search the rules</label>
+        <input
+          id="search"
+          name="q"
+          type="search"
+          enterkeyhint="search"
+          autocomplete="off"
+          placeholder="704.5f or state-based"
+          disabled
+        />
+        <div class="tries">
+          <span>Try</span>
+          <button type="button" data-query="704.5f" disabled>704.5f</button>
+          <button type="button" data-query="state-based" disabled>state-based</button>
+          <button type="button" data-query="trample" disabled>trample</button>
         </div>
-        <p id="status" role="status">No document loaded.</p>
-      </section>
+      </form>
 
-      <section aria-labelledby="search-heading">
-        <h2 id="search-heading">Search</h2>
-        <label for="search">Rule ID or text</label>
-        <input id="search" type="search" placeholder="704.5f or state-based" disabled />
-      </section>
+      <p id="status" role="status">Loading the rules…</p>
 
-      <div class="panels">
-        <section aria-labelledby="results-heading">
-          <h2 id="results-heading">Results</h2>
-          <ul id="results"></ul>
-        </section>
-        <section aria-labelledby="detail-heading">
-          <h2 id="detail-heading">Rule</h2>
-          <article id="detail">
-            <p>Select a result or enter an exact rule ID.</p>
-          </article>
-        </section>
-      </div>
+      <article id="detail" hidden></article>
+      <ul id="results"></ul>
     </main>
 
     <footer id="notices">
       <p>
+        This project is unofficial Fan Content. It is not approved, endorsed, or affiliated with
+        Wizards of the Coast LLC.
+      </p>
+      <p>
+        Magic: The Gathering and related names and marks are trademarks of Wizards of the Coast LLC.
+      </p>
+      <p>
+        The Comprehensive Rules text is copyrighted by Wizards of the Coast. Portions of the
+        materials used are property of Wizards of the Coast. © Wizards of the Coast LLC.
+      </p>
+      <p>
+        This generated data is a structural, machine-readable representation of the official
+        Comprehensive Rules. It does not interpret, modify, or replace the official rules.
+      </p>
+      <p>
+        The generated rules data may be used only for free, noncommercial purposes. It may not be
+        sold, paywalled, or otherwise monetized.
+      </p>
+      <p>
+        Optional maintenance support such as donations, sponsorships, or Patreon may be used to keep
+        this project running, without charging for access to the rules data.
+      </p>
+      <p>
         Official Comprehensive Rules:
         <a href="https://magic.wizards.com/en/rules">magic.wizards.com/en/rules</a>
       </p>
-      <p>Original mtg-rules code is MIT-licensed. MIT does not apply to Wizards-owned text.</p>
+      <p>
+        <a href="https://github.com/natewizz/mtg-rules">github.com/natewizz/mtg-rules</a>
+        · Original parser and tooling code is MIT-licensed. MIT does not apply to Wizards-owned
+        text.
+      </p>
     </footer>
 
     <script type="module" src="./app.js"></script>

@@ -7,7 +7,7 @@
   --line: #d6d3d1;
   --accent: #1d4ed8;
   --warn: #9a3412;
-  font-family: 'Source Serif 4', 'Iowan Old Style', Palatino, Georgia, serif;
+  font-family: 'Iowan Old Style', Palatino, Georgia, serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -30,7 +30,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .skip {
@@ -43,6 +43,7 @@ body {
   top: 1rem;
   background: var(--card);
   padding: 0.5rem;
+  z-index: 1;
 }
 
 .banner,
@@ -55,106 +56,175 @@ footer {
 
 .banner p,
 footer p {
-  margin: 0.35rem 0;
+  max-width: 42rem;
+  margin: 0.4rem auto;
 }
 
 main {
-  max-width: 68rem;
+  max-width: 42rem;
   margin: 0 auto;
-  padding: 1.25rem;
+  padding: 2.5rem 1.25rem 3rem;
 }
 
-.lede,
-.load p,
-label {
+.kicker {
+  margin: 0 0 0.35rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: 2.4rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  margin: 0 0 1.5rem;
+  font-size: 1.15rem;
+}
+
+.facts {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.facts li {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.facts strong,
+.facts span {
+  display: block;
+}
+
+.facts span {
   color: var(--muted);
 }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-button,
-.file {
-  font: inherit;
-  border: 1px solid var(--line);
-  background: var(--card);
-  color: var(--fg);
-  padding: 0.45rem 0.8rem;
-  border-radius: 0.35rem;
-  cursor: pointer;
-}
-
-.file input {
+label {
   display: block;
-  margin-top: 0.25rem;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
 }
 
 #search {
   width: 100%;
-  max-width: 32rem;
   font: inherit;
-  padding: 0.55rem 0.7rem;
+  font-size: 1.15rem;
+  padding: 0.7rem 0.85rem;
   border: 1px solid var(--line);
-  border-radius: 0.35rem;
+  border-radius: 0.4rem;
   background: var(--card);
   color: var(--fg);
 }
 
-.panels {
-  display: grid;
-  grid-template-columns: minmax(12rem, 18rem) 1fr;
-  gap: 1.25rem;
-  margin-top: 1rem;
+#search:disabled {
+  opacity: 0.6;
 }
 
-@media (max-width: 800px) {
-  .panels {
-    grid-template-columns: 1fr;
-  }
+.tries {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  margin-top: 0.7rem;
+  color: var(--muted);
 }
 
-#results {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  border: 1px solid var(--line);
-  border-radius: 0.4rem;
-  background: var(--card);
-  max-height: 28rem;
-  overflow: auto;
-}
-
+.tries button,
 #results button {
-  width: 100%;
-  text-align: left;
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  border-radius: 0;
-}
-
-#detail {
-  border: 1px solid var(--line);
-  border-radius: 0.4rem;
+  font: inherit;
+  color: var(--fg);
   background: var(--card);
-  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  cursor: pointer;
 }
 
-#detail h3 {
-  margin-top: 0;
+.tries button:disabled {
+  cursor: default;
+  opacity: 0.55;
 }
 
-.examples {
-  padding-left: 1.1rem;
+#status {
+  color: var(--muted);
+  min-height: 1.5rem;
 }
 
 .status-error {
   color: var(--warn);
 }
 
+#results {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  max-height: 22rem;
+  overflow: auto;
+}
+
+#results:empty {
+  display: none;
+}
+
+#results li + li {
+  margin-top: 0.35rem;
+}
+
+#results button {
+  width: 100%;
+  border-radius: 0.4rem;
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+}
+
+.hit-id {
+  display: inline-block;
+  min-width: 5.5rem;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+#detail {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: var(--card);
+}
+
+#detail[hidden] {
+  display: none;
+}
+
+.rule-id {
+  margin: 0 0 0.35rem;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+#detail h2,
+#detail h3 {
+  margin: 0.8rem 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.examples {
+  margin: 0.35rem 0 0;
+  padding-left: 1.15rem;
+}
+
 a {
   color: var(--accent);
+}
+
+footer a {
+  color: #93c5fd;
 }

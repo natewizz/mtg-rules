@@ -33,3 +33,14 @@ describe('static tester search helpers', () => {
     expect(searchGlossary(packaged, 'ability')[0]?.term).toBe('Ability');
   });
 });
+
+const homepage = await readFile(new URL('../web/index.html', import.meta.url), 'utf8');
+
+describe('homepage', () => {
+  it('explains the project and offers a search box', () => {
+    expect(homepage).toContain('id="search"');
+    expect(homepage).toContain('Unofficial Fan Content');
+    expect(homepage).toContain('free to use only');
+    expect(homepage).toContain('does not judge card interactions');
+  });
+});
