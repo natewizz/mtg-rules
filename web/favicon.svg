@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <title>mtg-rules</title>
+  <rect width="32" height="32" fill="#f4f1ea" />
+  <g transform="translate(1 5.5) scale(0.75)">
+    <rect x="1" y="5" width="16" height="22" fill="#fffdf8" stroke="#10140f" stroke-width="1.75" />
+    <path
+      d="M4 11h10M4 16h10M4 21h7"
+      fill="none"
+      stroke="#10140f"
+      stroke-width="1.6"
+      stroke-linecap="square"
+    />
+    <rect x="14" y="1" width="25" height="22" fill="#f5c400" stroke="#10140f" stroke-width="1.75" />
+    <path
+      fill="#10140f"
+      d="M24.12 16.51L27.52 7.9Q27.54 7.87 27.52 7.84Q27.49 7.81 27.46 7.81L24.93 7.81Q24.85 7.81 24.85 7.89L24.85 8.64Q24.85 8.72 24.8 8.78Q24.74 8.83 24.66 8.83L22.88 8.83Q22.8 8.83 22.75 8.78Q22.69 8.72 22.69 8.64L22.71 5.73Q22.71 5.65 22.76 5.59Q22.82 5.54 22.9 5.54L30.15 5.54Q30.23 5.54 30.28 5.59Q30.34 5.65 30.34 5.73L30.34 7.68Q30.34 7.78 30.29 7.92L26.92 16.59Q26.87 16.74 26.69 16.74L24.28 16.74Q24.04 16.74 24.12 16.51Z"
+    />
+  </g>
+</svg>
