@@ -77,7 +77,7 @@ function showRule(rule) {
     return;
   }
   const nextHash = `#${encodeURIComponent(rule.id)}`;
-  if (window.location.hash !== nextHash) window.location.hash = nextHash;
+  if (window.location.hash !== nextHash) history.pushState(null, '', nextHash);
   const examples = rule.examples.length
     ? `<h3>Examples</h3><ul class="examples">${rule.examples.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
     : '';
@@ -223,11 +223,16 @@ for (const button of tryButtons) {
 }
 
 for (const button of sectionButtons) {
+  button.addEventListener('mousedown', (event) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+  });
   button.addEventListener('click', () => {
     const section = button.dataset.section ?? '700';
     searchEl.value = '';
     setBoard(section);
     renderSection(section);
+    button.focus({ preventScroll: true });
   });
 }
 
@@ -266,9 +271,10 @@ function renderSection(section) {
   }
   if (matches[0]) showRule(matches[0]);
   resultsEl.scrollTop = 0;
+  window.scrollTo(0, 0);
   requestAnimationFrame(() => {
     resultsEl.scrollTop = 0;
-    document.querySelector('.reading')?.scrollIntoView({ block: 'start' });
+    window.scrollTo(0, 0);
   });
 }
 
