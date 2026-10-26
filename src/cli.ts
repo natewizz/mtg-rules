@@ -3,6 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { Command } from 'commander';
 import { diffRules } from './diff.js';
+import { parseTournamentRules, stringifyTournamentRules } from './mtr-parser.js';
 import { getRule, hashText, parseRules } from './parser.js';
 import { stringifyRules } from './json.js';
 import { PackageDataError, packageRulesSource, writePackagedRules } from './package-data.js';
@@ -16,7 +17,7 @@ const program = new Command();
 
 program
   .name('mtg-rules')
-  .description('Parse and validate official MTG Comprehensive Rules data.')
+  .description('Parse and validate official MTG Comprehensive Rules and Tournament Rules data.')
   .showSuggestionAfterError()
   .version(VERSION);
 
@@ -147,6 +148,56 @@ program
     printReport(report);
     if (!report.valid) process.exitCode = 1;
   });
+
+program
+  .command('parse-mtr')
+  .description('Parse a Magic Tournament Rules text extract into deterministic JSON.')
+  .addHelpText(
+    'after',
+    '\nExample:\n  $ mtg-rules parse-mtr mtr.txt -o mtr.json --source-sha256 <pdf-sha256>\n',
+  )
+  .argument('<input>', 'text extracted from the tournament rules PDF')
+  .requiredOption('-o, --output <path>', 'local JSON output path')
+  .option('--source-url <url>', 'official source page recorded in provenance')
+  .option('--source-sha256 <hash>', 'SHA-256 of the source PDF')
+  .option(
+    '--link <url>',
+    'external URL to record; repeat for each PDF link that is not written out in the text',
+    (value: string, previous: string[]) => {
+      previous.push(value);
+      return previous;
+    },
+    [] as string[],
+  )
+  .action(
+    async (
+      input: string,
+      options: { output: string; sourceUrl?: string; sourceSha256?: string; link: string[] },
+    ) => {
+      if (options.sourceSha256 && !/^[a-f0-9]{64}$/.test(options.sourceSha256)) {
+        throw new Error('--source-sha256 must be 64 lowercase hex characters.');
+      }
+      const document = parseTournamentRules(await readTextFile(input), {
+        ...(options.sourceUrl ? { sourceUrl: options.sourceUrl } : {}),
+        ...(options.sourceSha256 ? { sourceSha256: options.sourceSha256 } : {}),
+        externalLinks: options.link,
+      });
+      await writeFile(options.output, stringifyTournamentRules(document), 'utf8');
+      const ruleCount = Object.keys(document.rules).length;
+      console.log(`Wrote ${options.output}`);
+      console.log(`Effective date: ${document.metadata.effectiveDate || '(missing)'}`);
+      console.log(`Sections: ${Object.keys(document.sections).length}`);
+      console.log(`Rules: ${ruleCount}`);
+      console.log(
+        `Appendices: ${Object.keys(document.rules).filter((id) => id.startsWith('Appendix ')).length}`,
+      );
+      if (!document.metadata.effectiveDate || document.classification.unclassified.length > 0) {
+        for (const item of document.classification.unclassified) console.error(`- ${item}`);
+        console.error('Tournament rules parse failed.');
+        process.exitCode = 1;
+      }
+    },
+  );
 
 program
   .command('validate')

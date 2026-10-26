@@ -1,0 +1,32 @@
+MAGIC: THE GATHERING TOURNAMENT RULES
+Effective January 1, 2099
+Introduction ........................................................................................................1
+1.  Sample Chapter .................................................................................................1
+1.1 Sample Section ................................................................................................1
+
+---PAGE 2---
+2
+
+Introduction
+The synthetic tournament rules describe how a sample event is run across many tables.
+A second paragraph starts after that shorter line.
+1.  Sample Chapter
+1.1 Sample Section
+Word Word Word Word Word Word Word Word Word Word Word Word Word Word Word Word Word Word Word Word and
+Scorekeeper remains responsible for the record.
+Players must follow the sample procedure listed below for every match:
+• First duty
+that continues in lowercase
+• Floor Judge` 
+• Second duty
+1. If the match ends early, players report the result to the scorekeeper.
+2. Then they leave the table.
+See the guide located athttps://example.com/rules.
+1.2 Another Section
+Use 0.33 instead of a lower value when the percentage is small.
+See section 1.1 for the sample procedure.
+Appendix A—Sample Changes
+January 1, 2099
+1.1: Sample note added.
+All trademarks are property of the sample publisher.
+© 2099 Sample Publisher.

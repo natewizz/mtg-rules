@@ -7,6 +7,7 @@ coverage/
 *.rules.txt
 *.cr.txt
 MagicCompRules*.txt
+MTG_MTR*.pdf
 /downloads/
 # Official Wizards TXT remains local and is not tracked.
 # Approved generated JSON is a release artifact, not a Git-tracked file.
@@ -19,6 +20,7 @@ rules.json
 rules.json
 output/
 web/rules.json
+web/mtr.json
 /tmp/
 *.tgz
 

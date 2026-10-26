@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>mtg-rules — unofficial Tournament Rules lookup</title>
+    <meta
+      name="description"
+      content="Free, unofficial lookup for the Magic: The Gathering Tournament Rules. Search a section number or a phrase."
+    />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body data-document="tournament" data-source="./mtr.json" data-home-section="1" data-section="1">
+    <a class="skip" href="#search">Skip to search</a>
+    <div class="board">
+      <main class="leaf">
+        <header class="leaf-head">
+          <a class="brand" href="./tournament.html">
+            <svg class="logo" viewBox="0 0 40 28" aria-hidden="true">
+              <rect class="logo-leaf" x="1" y="5" width="16" height="22" />
+              <path class="logo-lines" d="M4 11h10M4 16h10M4 21h7" />
+              <rect class="logo-tab" x="14" y="1" width="25" height="22" />
+              <text class="logo-num" x="26.5" y="12.6">1</text>
+            </svg>
+            <span class="mark">mtg-rules</span>
+          </a>
+          <p class="banner">Unofficial Fan Content, free to use only.</p>
+          <nav class="doc-nav" aria-label="Documents">
+            <a href="./">Rules</a>
+            <a href="./tournament.html" aria-current="page">Tournament rules</a>
+          </nav>
+        </header>
+
+        <form id="lookup" role="search">
+          <label for="search">Search the tournament rules</label>
+          <input
+            id="search"
+            name="q"
+            type="search"
+            enterkeyhint="search"
+            autocomplete="off"
+            placeholder="2.12 or proxy"
+            disabled
+          />
+          <div class="tries">
+            <span>Try</span>
+            <button type="button" data-query="2.12" disabled>2.12</button>
+            <button type="button" data-query="proxy" disabled>proxy</button>
+            <button type="button" data-query="Appendix C" disabled>Appendix C</button>
+          </div>
+        </form>
+
+        <p id="status" role="status">Loading the tournament rules…</p>
+        <div class="reading">
+          <article id="detail" hidden></article>
+          <ul id="results"></ul>
+        </div>
+
+        <footer id="notices">
+          <h2>Notices</h2>
+          <section>
+            <h3>Fan content</h3>
+            <div>
+              <p>
+                This project is unofficial Fan Content. It is not approved, endorsed, or affiliated
+                with Wizards of the Coast LLC.
+              </p>
+              <p>
+                Magic: The Gathering and related names and marks are trademarks of Wizards of the
+                Coast LLC.
+              </p>
+            </div>
+          </section>
+          <section>
+            <h3>Copyright</h3>
+            <div>
+              <p>
+                The Magic Tournament Rules text is copyrighted by Wizards of the Coast. Portions of
+                the materials used are property of Wizards of the Coast. © Wizards of the Coast LLC.
+              </p>
+            </div>
+          </section>
+          <section>
+            <h3>Use</h3>
+            <div>
+              <p>
+                This generated data is a structural, machine-readable representation of the official
+                Magic Tournament Rules. It does not interpret, modify, or replace the official
+                rules.
+              </p>
+              <p>
+                The generated rules data may be used only for free, noncommercial purposes. It may
+                not be sold, paywalled, or otherwise monetized.
+              </p>
+              <p>
+                Optional maintenance support such as donations, sponsorships, or Patreon may be used
+                to keep this project running, without charging for access to the rules data.
+              </p>
+            </div>
+          </section>
+          <section>
+            <h3>Edition</h3>
+            <dl>
+              <div>
+                <dt>Rules</dt>
+                <dd>
+                  <a href="https://wpn.wizards.com/en/rules-documents"
+                    >wpn.wizards.com/en/rules-documents</a
+                  >
+                </dd>
+              </div>
+              <div>
+                <dt>Code</dt>
+                <dd>
+                  <a href="https://github.com/natewizz/mtg-rules">github.com/natewizz/mtg-rules</a>.
+                  Original parser and tooling code is MIT-licensed. MIT does not apply to
+                  Wizards-owned text. Barlow and EB Garamond are used under the SIL Open Font
+                  License.
+                </dd>
+              </div>
+            </dl>
+          </section>
+        </footer>
+      </main>
+
+      <nav class="tabs" aria-label="Tournament chapters">
+        <button type="button" data-section="1" class="is-open" aria-current="true" disabled>
+          1
+        </button>
+        <button type="button" data-section="2" disabled>2</button>
+        <button type="button" data-section="3" disabled>3</button>
+        <button type="button" data-section="4" disabled>4</button>
+        <button type="button" data-section="5" disabled>5</button>
+        <button type="button" data-section="6" disabled>6</button>
+        <button type="button" data-section="7" disabled>7</button>
+        <button type="button" data-section="8" disabled>8</button>
+        <button type="button" data-section="9" disabled>9</button>
+        <button type="button" data-section="10" disabled>10</button>
+      </nav>
+    </div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

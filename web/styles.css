@@ -84,6 +84,52 @@ body[data-section='900'] {
   --board: var(--pine);
   --board-ink: #fff;
 }
+body[data-section='1'] {
+  --board: var(--oxide);
+  --board-ink: #fff;
+}
+body[data-section='2'] {
+  --board: var(--sienna);
+  --board-ink: #fff;
+}
+body[data-section='3'] {
+  --board: var(--grass);
+  --board-ink: #fff;
+}
+body[data-section='4'] {
+  --board: var(--teal);
+  --board-ink: #fff;
+}
+body[data-section='5'] {
+  --board: var(--ultra);
+  --board-ink: #fff;
+}
+body[data-section='6'] {
+  --board: var(--violet);
+  --board-ink: #fff;
+}
+body[data-section='7'] {
+  --board: var(--yellow);
+  --board-ink: var(--ink);
+}
+body[data-section='8'] {
+  --board: var(--rust);
+  --board-ink: #fff;
+}
+body[data-section='9'] {
+  --board: var(--pine);
+  --board-ink: #fff;
+}
+body[data-section='10'],
+body[data-section='A'],
+body[data-section='B'],
+body[data-section='C'],
+body[data-section='D'],
+body[data-section='E'],
+body[data-section='F'] {
+  --board: #1d4e89;
+  --board-ink: #fff;
+}
 
 * {
   box-sizing: border-box;
@@ -130,11 +176,49 @@ body {
 
 .leaf-head {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 1.25rem;
   align-items: center;
   padding-bottom: 0.55rem;
   border-bottom: 1px solid var(--ink);
+}
+
+.doc-nav {
+  display: flex;
+  flex: 1 0 100%;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.15rem 0 0;
+}
+
+.doc-nav a {
+  font-family: Barlow, sans-serif;
+  font-weight: 800;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  background: transparent;
+  border: 2px solid var(--ink);
+  border-radius: 2px;
+  padding: 0.28rem 0.55rem;
+}
+
+.doc-nav a[aria-current='page'] {
+  background: var(--yellow);
+}
+
+.doc-nav a:hover {
+  background: #ffe14a;
+  color: var(--ink);
+}
+
+.doc-nav a:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
 }
 
 .brand {
@@ -332,6 +416,7 @@ button:focus-visible {
   margin: 0.45rem 0 0;
   font-size: 1.2rem;
   line-height: 1.28;
+  white-space: pre-wrap;
 }
 
 #detail h2 {
@@ -406,6 +491,14 @@ button:focus-visible {
 .hit-text {
   font-size: 1.02rem;
   line-height: 1.22;
+}
+
+body[data-document='tournament'] #results button {
+  grid-template-columns: 6.4rem minmax(0, 1fr);
+}
+
+body[data-document='tournament'] #detail .rule-id {
+  font-size: clamp(2.1rem, 5vw, 3.4rem);
 }
 
 footer {
@@ -537,6 +630,46 @@ a:hover {
 }
 .tabs button[data-section='900'] {
   background: var(--pine);
+  color: #fff;
+}
+.tabs button[data-section='1'] {
+  background: var(--oxide);
+  color: #fff;
+}
+.tabs button[data-section='2'] {
+  background: var(--sienna);
+  color: #fff;
+}
+.tabs button[data-section='3'] {
+  background: var(--grass);
+  color: #fff;
+}
+.tabs button[data-section='4'] {
+  background: var(--teal);
+  color: #fff;
+}
+.tabs button[data-section='5'] {
+  background: var(--ultra);
+  color: #fff;
+}
+.tabs button[data-section='6'] {
+  background: var(--violet);
+  color: #fff;
+}
+.tabs button[data-section='7'] {
+  background: var(--yellow);
+  color: var(--ink);
+}
+.tabs button[data-section='8'] {
+  background: var(--rust);
+  color: #fff;
+}
+.tabs button[data-section='9'] {
+  background: var(--pine);
+  color: #fff;
+}
+.tabs button[data-section='10'] {
+  background: #1d4e89;
   color: #fff;
 }
 
