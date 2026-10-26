@@ -76,3 +76,23 @@ export function searchGlossary(document, query, limit = 20) {
   }
   return matches;
 }
+
+export function glossaryEntry(document, term) {
+  const needle = String(term ?? '')
+    .trim()
+    .toLowerCase();
+  if (!needle) return undefined;
+  return Object.values(document?.glossary ?? {}).find(
+    (entry) => entry.term.toLowerCase() === needle,
+  );
+}
+
+export function keywordHeadingSubrules(document, rule) {
+  const text = String(rule?.text ?? '').trim();
+  if (!rule?.id || !text || !glossaryEntry(document, text)) return [];
+  const escaped = String(rule.id).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp(`^${escaped}[a-z]+$`);
+  return Object.values(document.rules ?? {})
+    .filter((item) => pattern.test(item.id))
+    .sort((a, b) => a.id.localeCompare(b.id, 'en'));
+}

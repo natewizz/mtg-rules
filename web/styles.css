@@ -419,6 +419,15 @@ button:focus-visible {
   white-space: pre-wrap;
 }
 
+#detail .subrule {
+  margin-top: 0.9rem;
+}
+
+#detail .subrule .rule-id {
+  font-size: 1.05rem;
+  line-height: 1.1;
+}
+
 #detail h2 {
   max-width: 65ch;
   margin: 0.35rem 0 0;
