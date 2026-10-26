@@ -1,4 +1,10 @@
-import { getRule, searchGlossary, searchRules, validateViewerDocument } from './search.mjs';
+import {
+  getRule,
+  searchGlossary,
+  searchRules,
+  validateTournamentDocument,
+  validateViewerDocument,
+} from './search.mjs';
 
 const statusEl = document.querySelector('#status');
 const searchEl = document.querySelector('#search');
@@ -10,6 +16,11 @@ const brandEl = document.querySelector('.brand');
 const tryButtons = [...document.querySelectorAll('[data-query]')];
 const sectionButtons = [...document.querySelectorAll('.tabs button')];
 
+const kind = document.body.dataset.document === 'tournament' ? 'tournament' : 'rules';
+const sourcePath =
+  document.body.dataset.source || (kind === 'tournament' ? './mtr.json' : './rules.json');
+const homeSection = document.body.dataset.homeSection || (kind === 'tournament' ? '1' : '700');
+
 let documentData;
 
 function setStatus(message, isError = false) {
@@ -17,9 +28,18 @@ function setStatus(message, isError = false) {
   statusEl.classList.toggle('status-error', isError);
 }
 
+function officialRulesUrl(rulesDocument) {
+  return (
+    rulesDocument.metadata.notices?.officialSourcePage ||
+    rulesDocument.metadata.sourceUrl ||
+    'https://magic.wizards.com/en/rules'
+  );
+}
+
 function renderNotices(rulesDocument) {
   const statements = rulesDocument.metadata.notices?.statements ?? [];
-  const sourceUrl = rulesDocument.metadata.sourceUrl || 'https://magic.wizards.com/en/rules';
+  const sourceUrl = rulesDocument.metadata.sourceUrl || officialRulesUrl(rulesDocument);
+  const rulesUrl = officialRulesUrl(rulesDocument);
   const groups =
     statements.length === 6
       ? [
@@ -43,7 +63,7 @@ function renderNotices(rulesDocument) {
         <div><dt>Version</dt><dd>${escapeHtml(rulesDocument.version || 'unknown')}</dd></div>
         <div><dt>Effective</dt><dd>${escapeHtml(rulesDocument.metadata.effectiveDate || 'unknown')}</dd></div>
         <div><dt>Source</dt><dd><a href="${escapeAttr(sourceUrl)}">${escapeHtml(sourceName(sourceUrl))}</a></dd></div>
-        <div><dt>Rules</dt><dd><a href="https://magic.wizards.com/en/rules">magic.wizards.com/en/rules</a></dd></div>
+        <div><dt>Rules</dt><dd><a href="${escapeAttr(rulesUrl)}">${escapeHtml(sourceLabel(rulesUrl))}</a></dd></div>
         <div><dt>Code</dt><dd><a href="https://github.com/natewizz/mtg-rules">github.com/natewizz/mtg-rules</a>. Original parser and tooling code is MIT-licensed. MIT does not apply to Wizards-owned text.</dd></div>
       </dl>
     </section>`;
@@ -53,6 +73,15 @@ function sourceName(url) {
   try {
     const name = decodeURIComponent(new URL(url).pathname.split('/').pop() || '');
     return name || url;
+  } catch {
+    return url;
+  }
+}
+
+function sourceLabel(url) {
+  try {
+    const parsed = new URL(url);
+    return `${parsed.hostname}${parsed.pathname}`.replace(/\/$/, '');
   } catch {
     return url;
   }
@@ -78,17 +107,28 @@ function showRule(rule) {
   }
   const nextHash = `#${encodeURIComponent(rule.id)}`;
   if (window.location.hash !== nextHash) history.pushState(null, '', nextHash);
-  const examples = rule.examples.length
+  const examples = (rule.examples ?? []).length
     ? `<h3>Examples</h3><ul class="examples">${rule.examples.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
     : '';
+  const title = rule.title ? `<h2>${escapeHtml(rule.title)}</h2>` : '';
+  const links =
+    Array.isArray(rule.links) && rule.links.length
+      ? `<h3>Links</h3><ul class="examples">${rule.links.map((href) => `<li><a href="${escapeAttr(href)}">${escapeHtml(href)}</a></li>`).join('')}</ul>`
+      : '';
   detailEl.hidden = false;
-  detailEl.innerHTML = `<p class="rule-id">${escapeHtml(rule.id)}</p><p class="wording">${escapeHtml(rule.text)}</p>${examples}`;
+  detailEl.innerHTML = `<p class="rule-id">${escapeHtml(rule.id)}</p>${title}<p class="wording">${escapeHtml(rule.text)}</p>${examples}${links}`;
   setBoard(sectionOf(rule.id));
 }
 
 function sectionOf(id) {
+  if (kind === 'tournament') {
+    const appendix = String(id).match(/^Appendix ([A-Z])$/);
+    if (appendix) return appendix[1];
+    const chapter = String(id).match(/^(\d+)/);
+    return chapter?.[1] || homeSection;
+  }
   const hundred = String(id).charAt(0);
-  return hundred >= '1' && hundred <= '9' ? `${hundred}00` : '700';
+  return hundred >= '1' && hundred <= '9' ? `${hundred}00` : homeSection;
 }
 
 function setBoard(section) {
@@ -115,18 +155,20 @@ function renderResults(query) {
   if (!trimmed) {
     detailEl.hidden = true;
     detailEl.replaceChildren();
-    setBoard('700');
+    setBoard(homeSection);
     return;
   }
 
-  const rules = searchRules(documentData, trimmed);
+  const rules = searchRules(documentData, trimmed, 50, {
+    numericBoundary: kind === 'tournament',
+  });
   const glossary = searchGlossary(documentData, trimmed);
 
   for (const rule of rules) {
     const item = document.createElement('li');
     const button = document.createElement('button');
     button.type = 'button';
-    button.innerHTML = `<span class="hit-id">${escapeHtml(rule.id)}</span><span class="hit-text">${escapeHtml(rule.text.slice(0, 160))}</span>`;
+    button.innerHTML = `<span class="hit-id">${escapeHtml(rule.id)}</span><span class="hit-text">${escapeHtml(preview(rule))}</span>`;
     button.addEventListener('click', () => showRule(rule));
     item.append(button);
     resultsEl.append(item);
@@ -144,7 +186,10 @@ function renderResults(query) {
 
   if (rules.length === 0 && glossary.length === 0) {
     detailEl.hidden = false;
-    detailEl.innerHTML = '<p>No matching rule or glossary entry.</p>';
+    detailEl.innerHTML =
+      kind === 'tournament'
+        ? '<p>No matching section.</p>'
+        : '<p>No matching rule or glossary entry.</p>';
     return;
   }
 
@@ -157,10 +202,19 @@ function renderResults(query) {
   }
 }
 
+function preview(rule) {
+  const body = rule.text.replace(/\s+/g, ' ').slice(0, 160);
+  return rule.title ? `${rule.title}. ${body}` : body;
+}
+
 function enableSearch() {
   searchEl.disabled = false;
   for (const button of tryButtons) button.disabled = false;
-  for (const button of sectionButtons) button.disabled = false;
+  for (const button of sectionButtons) {
+    const title = documentData?.sections?.[button.dataset.section]?.title;
+    if (title) button.setAttribute('aria-label', `${button.dataset.section}. ${title}`);
+    button.disabled = false;
+  }
   searchEl.focus();
 }
 
@@ -171,12 +225,14 @@ async function loadJson(text, label) {
   } catch {
     throw new Error('The rules file is not valid JSON.');
   }
-  const parsed = validateViewerDocument(value);
+  const parsed =
+    kind === 'tournament' ? validateTournamentDocument(value) : validateViewerDocument(value);
   documentData = parsed;
   renderNotices(parsed);
   const count = Object.keys(parsed.rules).length;
+  const unit = kind === 'tournament' ? 'sections' : 'rules';
   setStatus(
-    `mtg-rules ${parsed.version}. Effective ${parsed.metadata.effectiveDate}. ${count.toLocaleString('en-US')} rules. Unofficial, free to use only.`,
+    `mtg-rules ${parsed.version}. Effective ${parsed.metadata.effectiveDate}. ${count.toLocaleString('en-US')} ${unit}. Unofficial, free to use only.`,
   );
   enableSearch();
 
@@ -198,7 +254,7 @@ brandEl.addEventListener('click', (event) => {
     return;
   event.preventDefault();
   showHome();
-  const home = new URL('./', location.href);
+  const home = new URL(brandEl.getAttribute('href') || './', location.href);
   home.search = '';
   home.hash = '';
   if (location.href !== home.href) history.pushState(null, '', home.href);
@@ -228,7 +284,7 @@ for (const button of sectionButtons) {
     event.preventDefault();
   });
   button.addEventListener('click', () => {
-    const section = button.dataset.section ?? '700';
+    const section = button.dataset.section ?? homeSection;
     searchEl.value = '';
     setBoard(section);
     renderSection(section);
@@ -254,9 +310,10 @@ function compareRuleIds(a, b) {
 
 function renderSection(section) {
   if (!documentData) return;
-  const hundred = section.charAt(0);
   const matches = Object.values(documentData.rules)
-    .filter((rule) => rule.id.charAt(0) === hundred)
+    .filter((rule) =>
+      kind === 'tournament' ? rule.section === section : rule.id.charAt(0) === section.charAt(0),
+    )
     .sort((a, b) => compareRuleIds(a.id, b.id))
     .slice(0, 40);
   resultsEl.replaceChildren();
@@ -264,7 +321,7 @@ function renderSection(section) {
     const item = document.createElement('li');
     const button = document.createElement('button');
     button.type = 'button';
-    button.innerHTML = `<span class="hit-id">${escapeHtml(rule.id)}</span><span class="hit-text">${escapeHtml(rule.text.slice(0, 160))}</span>`;
+    button.innerHTML = `<span class="hit-id">${escapeHtml(rule.id)}</span><span class="hit-text">${escapeHtml(preview(rule))}</span>`;
     button.addEventListener('click', () => showRule(rule));
     item.append(button);
     resultsEl.append(item);
@@ -293,12 +350,13 @@ window.addEventListener('popstate', () => {
 });
 
 try {
-  const response = await fetch('./rules.json');
-  if (!response.ok) throw new Error(`Could not load rules.json (HTTP ${response.status}).`);
-  await loadJson(await response.text(), './rules.json');
+  const response = await fetch(sourcePath);
+  if (!response.ok) throw new Error(`Could not load ${sourcePath} (HTTP ${response.status}).`);
+  await loadJson(await response.text(), sourcePath);
 } catch (error) {
-  setStatus(
-    `${error instanceof Error ? error.message : String(error)} Run npm run prepare:web, then reload.`,
-    true,
-  );
+  const hint =
+    kind === 'tournament'
+      ? 'Generate web/mtr.json, then reload.'
+      : 'Run npm run prepare:web, then reload.';
+  setStatus(`${error instanceof Error ? error.message : String(error)} ${hint}`, true);
 }

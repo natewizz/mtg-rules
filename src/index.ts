@@ -1,4 +1,18 @@
 export { getRule, hashText, parseRules } from './parser.js';
+export {
+  MTR_DATA_PROFILE,
+  MTR_DOCUMENT_VERSION,
+  MTR_SOURCE_PAGE,
+  getTournamentRule,
+  parseTournamentRules,
+  stringifyTournamentRules,
+} from './mtr-parser.js';
+export type {
+  TournamentNotices,
+  TournamentRule,
+  TournamentRulesDocument,
+  TournamentSection,
+} from './mtr-parser.js';
 export { validateRules } from './validator.js';
 export { diffRules } from './diff.js';
 export { compareRuleIds, isRuleId, parseRuleId, parentRuleId, parseRuleLine } from './rule-id.js';

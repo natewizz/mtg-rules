@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- added a Magic Tournament Rules parser and `parse-mtr`, writing a second JSON document beside the Comprehensive Rules.
+- added a Tournament Rules lookup beside the Comprehensive Rules page, with a header switch between them.
+
 ## 0.2.0
 
 Permitted generated-JSON redistribution:
