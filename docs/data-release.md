@@ -6,9 +6,10 @@ This process is **manual**. Do not add CI that publishes data automatically.
 
 ## What is published
 
-Attach both files to a **pre-release**:
+Attach these files to a **pre-release**:
 
 - `rules.json` — profile `complete-generated-document`
+- `mtr.json` — profile `complete-generated-tournament-rules`. The web build downloads this beside `rules.json`.
 - `NOTICE.txt` — required unofficial / free-use notices
 - `latest.json` — the same pointer committed on `main`, so the release folder matches the stable URL
 
@@ -65,7 +66,7 @@ Before the upload, rewrite the committed `latest.json` so `tag`, `effectiveDate`
 
 Release notes must include the unofficial disclaimer, that the JSON is free to use only, the effective date, source URL, source SHA-256, and a reminder that MIT does not apply to Wizards-owned text.
 
-After the upload, confirm the GitHub release file list is `rules.json`, `NOTICE.txt`, and `latest.json`, then delete the local `output/data-release` copy if you no longer need it. The stable pointer for apps is `https://raw.githubusercontent.com/natewizz/mtg-rules/main/latest.json`. The homepage `rules.json` is not that contract.
+After the upload, confirm the GitHub release file list is `rules.json`, `mtr.json`, `NOTICE.txt`, and `latest.json`, then delete the local `output/data-release` copy if you no longer need it. The stable pointer for apps is `https://raw.githubusercontent.com/natewizz/mtg-rules/main/latest.json`. The homepage `rules.json` is not that contract.
 
 ## Next CR update
 

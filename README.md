@@ -37,7 +37,7 @@ This repository still does **not** contain:
 - historical Comprehensive Rules copies; or
 - a hosted rules API.
 
-A public homepage lives in `web/`. It explains the project and searches a packaged `rules.json`. That file is not stored in Git. `npm run prepare:web` downloads the current GitHub pre-release into `web/rules.json`, and the Vercel build runs the same step so the hosted page can load it.
+A public homepage lives in `web/`. It explains the project and searches a packaged `rules.json`. That file is not stored in Git. `npm run prepare:web` downloads the current GitHub pre-release into `web/rules.json` and `web/mtr.json`, and the Vercel build runs the same step so the hosted pages can load them.
 
 `parse` writes local JSON for the user. `package-data` is the only command that produces an approved distributable artifact, and only when the profile is explicit, validation passes, and provenance plus notices are present. Official source TXT is fetched at runtime or supplied locally. Approved JSON belongs in a GitHub **pre-release asset**, not in Git or the npm package. The manual checklist is in [docs/data-release.md](docs/data-release.md). Synthetic fixtures in `tests/fixtures/` remain original and small.
 
@@ -143,7 +143,7 @@ Then open http://127.0.0.1:4173/. The header switches to the Tournament Rules lo
 
 ## Tournament rules
 
-The Magic Tournament Rules are a second document, separate from the Comprehensive Rules. `parse-mtr` reads a text extract of the official PDF and writes JSON beside `rules.json`. The file is local and gitignored, same as the Comprehensive Rules artifact. It is not listed in `latest.json` yet.
+The Magic Tournament Rules are a second document, separate from the Comprehensive Rules. `parse-mtr` reads a text extract of the official PDF and writes JSON beside `rules.json`. `npm run prepare:web` downloads the published `mtr.json` from the same GitHub pre-release as `rules.json`. The file stays gitignored. It is not listed in `latest.json` yet.
 
 ```bash
 node dist/cli.js parse-mtr mtr.txt -o web/mtr.json --source-sha256 <pdf-sha256>
