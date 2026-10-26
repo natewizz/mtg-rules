@@ -1,5 +1,7 @@
 import {
   getRule,
+  glossaryEntry,
+  keywordHeadingSubrules,
   searchGlossary,
   searchRules,
   validateTournamentDocument,
@@ -99,25 +101,41 @@ function escapeAttr(value) {
   return escapeHtml(value).replaceAll("'", '&#39;');
 }
 
-function showRule(rule) {
+function showRule(rule, options = {}) {
   if (!rule) {
     detailEl.hidden = false;
     detailEl.innerHTML = '<p>Rule not found.</p>';
     return;
   }
-  const nextHash = `#${encodeURIComponent(rule.id)}`;
-  if (window.location.hash !== nextHash) history.pushState(null, '', nextHash);
-  const examples = (rule.examples ?? []).length
-    ? `<h3>Examples</h3><ul class="examples">${rule.examples.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
-    : '';
+  if (options.recordHistory !== false) {
+    const nextHash = `#${encodeURIComponent(rule.id)}`;
+    if (window.location.hash !== nextHash) history.pushState(null, '', nextHash);
+  }
+  const subrules =
+    kind === 'rules' && documentData ? keywordHeadingSubrules(documentData, rule) : [];
   const title = rule.title ? `<h2>${escapeHtml(rule.title)}</h2>` : '';
+  const wording = subrules.length
+    ? title
+      ? ''
+      : `<h2>${escapeHtml(rule.text.trim())}</h2>`
+    : `<p class="wording">${escapeHtml(rule.text)}</p>`;
   const links =
     Array.isArray(rule.links) && rule.links.length
       ? `<h3>Links</h3><ul class="examples">${rule.links.map((href) => `<li><a href="${escapeAttr(href)}">${escapeHtml(href)}</a></li>`).join('')}</ul>`
       : '';
   detailEl.hidden = false;
-  detailEl.innerHTML = `<p class="rule-id">${escapeHtml(rule.id)}</p>${title}<p class="wording">${escapeHtml(rule.text)}</p>${examples}${links}`;
+  detailEl.innerHTML = `<p class="rule-id">${escapeHtml(rule.id)}</p>${title}${wording}${examplesHtml(rule)}${subrules.map(subruleHtml).join('')}${links}`;
   setBoard(sectionOf(rule.id));
+}
+
+function examplesHtml(rule) {
+  return (rule.examples ?? []).length
+    ? `<h3>Examples</h3><ul class="examples">${rule.examples.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+    : '';
+}
+
+function subruleHtml(rule) {
+  return `<section class="subrule"><p class="rule-id">${escapeHtml(rule.id)}</p><p class="wording">${escapeHtml(rule.text)}</p>${examplesHtml(rule)}</section>`;
 }
 
 function sectionOf(id) {
@@ -141,10 +159,38 @@ function setBoard(section) {
   }
 }
 
-function showGlossary(entry) {
-  window.location.hash = '';
+function showGlossary(entry, options = {}) {
+  if (options.recordHistory !== false) {
+    const nextHash = `#glossary:${encodeURIComponent(entry.term)}`;
+    if (decodeURIComponent(window.location.hash) !== decodeURIComponent(nextHash)) {
+      history.pushState(null, '', nextHash);
+    }
+  }
   detailEl.hidden = false;
   detailEl.innerHTML = `<p class="rule-id">Glossary</p><h2>${escapeHtml(entry.term)}</h2><p class="wording">${escapeHtml(entry.text)}</p>`;
+}
+
+function currentHashId() {
+  const raw = window.location.hash.replace(/^#/, '');
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
+}
+
+function applyLocationHash() {
+  if (!documentData) return;
+  const id = currentHashId();
+  if (id.startsWith('glossary:')) {
+    const entry = glossaryEntry(documentData, id.slice('glossary:'.length));
+    if (entry) {
+      showGlossary(entry, { recordHistory: false });
+      return;
+    }
+  }
+  if (id && documentData.rules[id]) showRule(documentData.rules[id], { recordHistory: false });
+  else if (!id) showHome();
 }
 
 function renderResults(query) {
@@ -236,8 +282,14 @@ async function loadJson(text, label) {
   );
   enableSearch();
 
-  const hashId = decodeURIComponent(window.location.hash.replace(/^#/, ''));
-  if (hashId && parsed.rules[hashId]) {
+  const hashId = currentHashId();
+  if (hashId.startsWith('glossary:')) {
+    const term = hashId.slice('glossary:'.length);
+    searchEl.value = term;
+    renderResults(term);
+    const entry = glossaryEntry(parsed, term);
+    if (entry) showGlossary(entry, { recordHistory: false });
+  } else if (hashId && parsed.rules[hashId]) {
     searchEl.value = hashId;
     renderResults(hashId);
   }
@@ -336,17 +388,11 @@ function renderSection(section) {
 }
 
 window.addEventListener('hashchange', () => {
-  if (!documentData) return;
-  const id = decodeURIComponent(window.location.hash.replace(/^#/, ''));
-  if (id && documentData.rules[id]) showRule(documentData.rules[id]);
-  else if (!id) showHome();
+  applyLocationHash();
 });
 
 window.addEventListener('popstate', () => {
-  if (!documentData) return;
-  const id = decodeURIComponent(window.location.hash.replace(/^#/, ''));
-  if (id && documentData.rules[id]) showRule(documentData.rules[id]);
-  else showHome();
+  applyLocationHash();
 });
 
 try {

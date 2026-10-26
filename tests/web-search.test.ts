@@ -6,6 +6,8 @@ import { packageRulesSource } from '../src/package-data.js';
 import { parseRules } from '../src/parser.js';
 import {
   getRule,
+  glossaryEntry,
+  keywordHeadingSubrules,
   searchGlossary,
   searchRules,
   validateTournamentDocument,
@@ -37,6 +39,27 @@ describe('static tester search helpers', () => {
 
   it('finds glossary terms', () => {
     expect(searchGlossary(packaged, 'ability')[0]?.term).toBe('Ability');
+  });
+
+  it('treats a glossary keyword heading as the parent of its lettered subrules', () => {
+    const document = {
+      glossary: {
+        Trample: { term: 'Trample', text: 'A keyword ability.' },
+      },
+      rules: {
+        '702.19': { id: '702.19', text: 'Trample' },
+        '702.19a': { id: '702.19a', text: 'Trample is a static ability.' },
+        '702.19b': { id: '702.19b', text: 'Assign damage.' },
+        '702.190': { id: '702.190', text: 'Sneak' },
+        '100.1': { id: '100.1', text: 'These Magic rules apply to any Magic game.' },
+      },
+    };
+
+    expect(glossaryEntry(document, 'trample')?.term).toBe('Trample');
+    expect(
+      keywordHeadingSubrules(document, document.rules['702.19']).map((rule) => rule.id),
+    ).toEqual(['702.19a', '702.19b']);
+    expect(keywordHeadingSubrules(document, document.rules['100.1'])).toEqual([]);
   });
 
   it('searches tournament sections by number, title, and text without crossing chapters', () => {

@@ -5,6 +5,8 @@
 - added a Magic Tournament Rules parser and `parse-mtr`, writing a second JSON document beside the Comprehensive Rules.
 - added a Tournament Rules lookup beside the Comprehensive Rules page, with a header switch between them.
 - download `mtr.json` from the data pre-release during the web build, beside `rules.json`.
+- keep a glossary definition on screen when its result is chosen.
+- show the lettered subrules when a keyword heading is only the keyword name.
 
 ## 0.2.0
 
