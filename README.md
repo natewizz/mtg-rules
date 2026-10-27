@@ -141,6 +141,8 @@ npm run web
 
 Then open http://127.0.0.1:4173/. The header switches to the Tournament Rules lookup at http://127.0.0.1:4173/tournament.html, which reads `web/mtr.json`. Do not commit `web/rules.json` or `web/mtr.json`. You can also open a downloaded release JSON with the file picker. GitHub release downloads are often blocked by browser CORS; same-origin `web/rules.json` or a local file is the reliable path.
 
+When the browser provides `document.modelContext`, the page registers [WebMCP](https://github.com/webmachinelearning/webmcp) tools: `lookup-rule`, `search-rules`, `lookup-glossary`, `lookup-tournament-rule`, and `search-tournament-rules`. A headless agent opens the page and calls those tools. Each result is official wording, with the effective date and the unofficial, free-use notices. Browsers without that API keep the search box.
+
 ## Tournament rules
 
 The Magic Tournament Rules are a second document, separate from the Comprehensive Rules. `parse-mtr` reads a text extract of the official PDF and writes JSON beside `rules.json`. `npm run prepare:web` downloads the published `mtr.json` from the same GitHub pre-release as `rules.json`. The file stays gitignored. It is not listed in `latest.json` yet.
