@@ -7,6 +7,7 @@ import {
   validateTournamentDocument,
   validateViewerDocument,
 } from './search.mjs';
+import { registerLookupTools } from './webmcp.js';
 
 const statusEl = document.querySelector('#status');
 const searchEl = document.querySelector('#search');
@@ -293,7 +294,45 @@ async function loadJson(text, label) {
     searchEl.value = hashId;
     renderResults(hashId);
   }
+  exposeTools(parsed);
   return label;
+}
+
+function exposeTools(primary) {
+  const controller = new AbortController();
+  window.addEventListener('pagehide', () => controller.abort(), { once: true });
+  registerPageTools(primary, controller.signal);
+}
+
+async function registerPageTools(primary, signal) {
+  try {
+    await registerLookupTools(document.modelContext, {
+      rulesDocument: kind === 'rules' ? primary : null,
+      tournamentDocument: kind === 'tournament' ? primary : null,
+      signal,
+    });
+  } catch {
+    // The search box already works when this browser has no WebMCP tools.
+  }
+  await registerCompanionTools(signal);
+}
+
+async function registerCompanionTools(signal) {
+  if (!document.modelContext?.registerTool) return;
+  const companionPath = kind === 'tournament' ? './rules.json' : './mtr.json';
+  const validate = kind === 'tournament' ? validateViewerDocument : validateTournamentDocument;
+  try {
+    const response = await fetch(companionPath);
+    if (!response.ok || signal.aborted) return;
+    const companion = validate(JSON.parse(await response.text()));
+    await registerLookupTools(document.modelContext, {
+      rulesDocument: kind === 'tournament' ? companion : null,
+      tournamentDocument: kind === 'rules' ? companion : null,
+      signal,
+    });
+  } catch {
+    // A missing companion document only omits that document's tools.
+  }
 }
 
 function showHome() {

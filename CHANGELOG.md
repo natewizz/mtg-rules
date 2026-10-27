@@ -7,6 +7,7 @@
 - download `mtr.json` from the data pre-release during the web build, beside `rules.json`.
 - keep a glossary definition on screen when its result is chosen.
 - show the lettered subrules when a keyword heading is only the keyword name.
+- register read-only WebMCP tools so an agent can look up either rules document from the page.
 
 ## 0.2.0
 
