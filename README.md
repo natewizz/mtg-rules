@@ -143,6 +143,8 @@ Then open http://127.0.0.1:4173/. The header switches to the Tournament Rules lo
 
 When the browser provides `document.modelContext`, the page registers [WebMCP](https://github.com/webmachinelearning/webmcp) tools: `lookup-rule`, `search-rules`, `lookup-glossary`, `lookup-tournament-rule`, and `search-tournament-rules`. A headless agent opens the page and calls those tools. Each result is official wording, with the effective date and the unofficial, free-use notices. Browsers without that API keep the search box.
 
+The same header links to `web/devs.html`, which tells an app to pin `latest.json` instead of the copy served with the homepage.
+
 ## Tournament rules
 
 The Magic Tournament Rules are a second document, separate from the Comprehensive Rules. `parse-mtr` reads a text extract of the official PDF and writes JSON beside `rules.json`. `npm run prepare:web` downloads the published `mtr.json` from the same GitHub pre-release as `rules.json`. The file stays gitignored. It is not listed in `latest.json` yet.
