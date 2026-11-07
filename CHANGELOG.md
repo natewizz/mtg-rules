@@ -9,6 +9,7 @@
 - show the lettered subrules when a keyword heading is only the keyword name.
 - register read-only WebMCP tools so an agent can look up either rules document from the page.
 - add a Devs page with instructions for using the released rules text in an app.
+- packaged Comprehensive Rules effective November 6, 2026 as pre-release `v0.2.0-data.3`.
 
 ## 0.2.0
 

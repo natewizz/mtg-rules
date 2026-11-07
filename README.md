@@ -10,7 +10,7 @@ This is pre-1.0 software. The parser is tested against the current official Comp
 
 Current version: **v0.2.0**.
 
-Current rules data: **v0.2.0-data.2**, effective September 25, 2026. 3,166 rules and 741 glossary entries, from `MagicCompRules 20260925.txt`.
+Current rules data: **v0.2.0-data.3**, effective November 6, 2026. 3,183 rules and 744 glossary entries, from `MagicCompRules 20261106.txt`.
 
 ## Data and licensing boundary
 
