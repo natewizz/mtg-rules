@@ -1,7 +1,7 @@
 import { rename, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const RELEASE_TAG = 'v0.2.0-data.2';
+const RELEASE_TAG = 'v0.2.0-data.3';
 const REPO = 'natewizz/mtg-rules';
 const token = process.env.MTG_RULES_GITHUB_TOKEN || process.env.GITHUB_TOKEN || '';
 
