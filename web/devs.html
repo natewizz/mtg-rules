@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>mtg-rules — use the rules text in an app</title>
+    <meta
+      name="description"
+      content="How to load the unofficial Magic rules JSON in an app. Pin the versioned release, read a rule by id, and keep the free-use notices."
+    />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body data-document="devs">
+    <a class="skip" href="#start">Skip to instructions</a>
+    <div class="board">
+      <main class="leaf">
+        <header class="leaf-head">
+          <a class="brand" href="./">
+            <svg class="logo" viewBox="0 0 40 28" aria-hidden="true">
+              <rect class="logo-leaf" x="1" y="5" width="16" height="22" />
+              <path class="logo-lines" d="M4 11h10M4 16h10M4 21h7" />
+              <rect class="logo-tab" x="14" y="1" width="25" height="22" />
+              <text class="logo-num" x="26.5" y="12.6">{}</text>
+            </svg>
+            <span class="mark">mtg-rules</span>
+          </a>
+          <p class="banner">Unofficial Fan Content, free to use only.</p>
+          <nav class="doc-nav" aria-label="Documents">
+            <a href="./">Rules</a>
+            <a href="./tournament.html">Tournament rules</a>
+            <a href="./devs.html" aria-current="page">Devs</a>
+          </nav>
+        </header>
+
+        <article class="guide" id="start">
+          <h1>Use the rules text in an app</h1>
+          <p>
+            The search pages are for a person reading a rule. An app should download the versioned
+            release, then read a rule by its id. The text is the official wording. It does not judge
+            a card interaction.
+          </p>
+
+          <h2>Pin the release</h2>
+          <p>
+            Start from the pointer on <code>main</code>. It names the data tag, the effective date,
+            and the file URLs. Save <code>rulesUrl</code> with your build. Read this pointer again
+            when you want a newer edition.
+          </p>
+          <pre>https://raw.githubusercontent.com/natewizz/mtg-rules/main/latest.json</pre>
+          <p>
+            The current pointer is <code>v0.2.0-data.2</code>, effective September 25, 2026. Do not
+            pin <code>rules.json</code> from this website. That copy changes when the site is
+            deployed and is not the contract.
+          </p>
+
+          <h2>Refuse the wrong file</h2>
+          <p>Before you show any wording, require all of these:</p>
+          <ul>
+            <li><code>profile</code> is <code>complete-generated-document</code>.</li>
+            <li><code>unofficial</code> is <code>true</code>.</li>
+            <li><code>freeUseOnly</code> is <code>true</code>.</li>
+          </ul>
+          <p>
+            Also fetch <code>noticeUrl</code> and keep that notice with the data. The rules text is
+            free to use only, and it may not be sold or paywalled. MIT covers the parser code. It
+            does not cover the Wizards-owned text.
+          </p>
+          <pre>
+const latest = await fetch(
+  'https://raw.githubusercontent.com/natewizz/mtg-rules/main/latest.json',
+).then((response) => response.json());
+
+if (
+  latest.profile !== 'complete-generated-document' ||
+  latest.unofficial !== true ||
+  latest.freeUseOnly !== true
+) {
+  throw new Error('This pointer is not the free, unofficial rules release.');
+}
+
+const rules = await fetch(latest.rulesUrl).then((response) => response.json());
+const rule = rules.rules['704.5f'];</pre>
+
+          <h2>Read a rule</h2>
+          <p>
+            <code>rules.rules['704.5f']</code> is the rule. Each entry has <code>id</code>,
+            <code>text</code>, and <code>examples</code>. Glossary entries live on
+            <code>rules.glossary</code>, keyed by the term, such as <code>Trample</code>. Chapter
+            titles live on <code>rules.sections</code>.
+          </p>
+          <p>
+            A keyword heading such as <code>702.19</code> is only the name <code>Trample</code>. The
+            definition continues in <code>702.19a</code>, <code>702.19b</code>, and the rest of that
+            lettered run. <code>702.190</code> is a different keyword.
+          </p>
+
+          <h2>Tournament rules</h2>
+          <p>
+            The Magic Tournament Rules are a second document. The same pre-release publishes
+            <code>mtr.json</code> beside <code>rules.json</code>. Take the <code>rulesUrl</code> and
+            change the filename to <code>mtr.json</code>. <code>latest.json</code> does not name
+            that file yet, so do not wait for a field that is not there.
+          </p>
+          <p>
+            Require <code>metadata.dataProfile</code> to be
+            <code>complete-generated-tournament-rules</code>, with the same unofficial and free-use
+            notices. Look up <code>rules['2.12']</code> or <code>rules['Appendix C']</code>. Each
+            entry has <code>id</code>, <code>title</code>, <code>section</code>, and
+            <code>text</code>.
+          </p>
+
+          <h2>Browser agents</h2>
+          <p>
+            An agent that can open this site in a browser with
+            <code>document.modelContext</code> can call <code>lookup-rule</code>,
+            <code>search-rules</code>, <code>lookup-glossary</code>,
+            <code>lookup-tournament-rule</code>, and <code>search-tournament-rules</code>. Those
+            tools answer one lookup. They are not a replacement for pinning <code>rulesUrl</code> in
+            an app.
+          </p>
+        </article>
+      </main>
+    </div>
+  </body>
+</html>

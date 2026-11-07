@@ -692,6 +692,70 @@ a:hover {
   cursor: default;
 }
 
+body[data-document='devs'] .board {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+body[data-document='devs'] .leaf {
+  margin-right: 1.25rem;
+}
+
+.guide {
+  max-width: 68ch;
+}
+
+.guide h1 {
+  margin: 0.85rem 0 0.35rem;
+  font-family: Barlow, sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+.guide h2 {
+  margin: 1.35rem 0 0.3rem;
+  font-family: Barlow, sans-serif;
+  font-weight: 800;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.guide p,
+.guide li {
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.guide ul {
+  margin: 0.35rem 0 0;
+  padding-left: 1.15rem;
+}
+
+.guide a {
+  color: var(--ink);
+}
+
+.guide code,
+.guide pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.84rem;
+}
+
+.guide pre {
+  overflow: auto;
+  margin: 0.55rem 0 0;
+  padding: 0.75rem 0.85rem;
+  border: 2px solid var(--ink);
+  border-radius: 2px;
+  background: #fffdf8;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 @media (min-width: 880px) {
   .reading {
     grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.9fr);

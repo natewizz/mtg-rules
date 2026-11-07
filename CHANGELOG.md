@@ -8,6 +8,7 @@
 - keep a glossary definition on screen when its result is chosen.
 - show the lettered subrules when a keyword heading is only the keyword name.
 - register read-only WebMCP tools so an agent can look up either rules document from the page.
+- add a Devs page with instructions for using the released rules text in an app.
 
 ## 0.2.0
 

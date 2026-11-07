@@ -98,6 +98,7 @@ describe('static tester search helpers', () => {
 
 const homepage = await readFile(new URL('../web/index.html', import.meta.url), 'utf8');
 const tournamentPage = await readFile(new URL('../web/tournament.html', import.meta.url), 'utf8');
+const devsPage = await readFile(new URL('../web/devs.html', import.meta.url), 'utf8');
 
 describe('homepage', () => {
   it('explains the project and offers a search box', () => {
@@ -111,9 +112,19 @@ describe('homepage', () => {
     expect(homepage).toContain('class="doc-nav"');
     expect(homepage).toContain('href="./tournament.html"');
     expect(homepage).toContain('aria-current="page">Rules');
+    expect(homepage).toContain('href="./devs.html">Devs');
     expect(tournamentPage).toContain('data-source="./mtr.json"');
     expect(tournamentPage).toContain('aria-current="page">Tournament rules');
+    expect(tournamentPage).toContain('href="./devs.html">Devs');
     expect(tournamentPage).toContain('href="./"');
     expect(tournamentPage).toContain('placeholder="2.12 or proxy"');
+    expect(devsPage).toContain('aria-current="page">Devs');
+    expect(devsPage).toContain(
+      'https://raw.githubusercontent.com/natewizz/mtg-rules/main/latest.json',
+    );
+    expect(devsPage).toContain('complete-generated-document');
+    expect(devsPage).toContain('complete-generated-tournament-rules');
+    expect(devsPage).toContain('free to use only');
+    expect(devsPage).not.toContain('src="./app.js"');
   });
 });
